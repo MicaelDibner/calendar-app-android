@@ -1,0 +1,326 @@
+<ion-content>
+  <div class="screen">
+    <p>{{getGeorgianDate() + ' ' + getHebrewDateNumbers() + ' ' + getHebrewDate()}}</p>
+    <!-- YomTov -->
+    <button [class.yomtov]="true" *ngIf="this.dayInfo.yomtov" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.yomtov = !notificationsView.yomtov" [attr.aria-expanded]="!notificationsView.yomtov">
+        <h5><span>{{this.hagim[dayInfo.holydayNumber] + ' '}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.yomtov">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.yomtov; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.yomtov, i, 'yomtov')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.yomtov; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.yomtov.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-info" (keydown.enter)="notificationsButtonView.yomtov = !notificationsButtonView.yomtov">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.yomtov" (emitNotification)="createNotification($event, newnotifications.yomtov, notificationsButtonView.yomtov)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+    <!-- Holyday -->
+    <button [class.holyday]="true" *ngIf="this.dayInfo.holyday && !this.dayInfo.yomtov" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.holyday = !notificationsView.holyday" [attr.aria-expanded]="!notificationsView.holyday">
+        <h5><span>{{this.hagim[dayInfo.holydayNumber] + ' '}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.holyday">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.holyday; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.holyday, i, 'holyday')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.holyday; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.holyday.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.holyday = !notificationsButtonView.holyday">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.holyday" (emitNotification)="createNotification($event, newnotifications.holyday, notificationsButtonView.holyday)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+      <!-- Omer -->
+      <button *ngIf="this.dayInfo.omer !== -1" [class.omer]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.omer = !notificationsView.omer" [attr.aria-expanded]="!notificationsView.omer">
+        <h5><span>{{'OMER' + this.dayInfo.omer + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.omer">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.omer; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.omer, i, 'omer')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.omer; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.omer.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.omer = !notificationsButtonView.omer">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.omer" (emitNotification)="createNotification($event, newnotifications.omer, notificationsButtonView.omer)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- chanukah -->
+      <button *ngIf="this.dayInfo.chanukah !== -1" [class.chanukah]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.chanukah = !notificationsView.chanukah" [attr.aria-expanded]="!notificationsView.chanukah">
+        <h5><span>{{'CHANUKAH' + this.dayInfo.chanukah + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.chanukah">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.chanukah; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.chanukah, i, 'chanukah')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.chanukah; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.chanukah.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.chanukah = !notificationsButtonView.chanukah">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.chanukah" (emitNotification)="createNotification($event, newnotifications.chanukah, notificationsButtonView.chanukah)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- roshhodesh -->
+
+      <button *ngIf="this.dayInfo.roshhodesh" [class.roshhodesh]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.roshhodesh = !notificationsView.roshhodesh" [attr.aria-expanded]="!notificationsView.roshhodesh">
+        <h5><span>{{'ROSHODESH' + " "}}</span><span>{{this.dayInfo.molad | date: 'MM-dd HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.roshhodesh">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.roshhodesh; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.roshhodesh, i, 'roshhodesh')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.roshhodesh; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.roshhodesh.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.roshhodesh = !notificationsButtonView.roshhodesh">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.roshhodesh" (emitNotification)="createNotification($event, newnotifications.roshhodesh, notificationsButtonView.roshhodesh)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- taanis -->
+
+      <button *ngIf="this.dayInfo.taanis" [class.taanis]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.taanis = !notificationsView.taanis" [attr.aria-expanded]="!notificationsView.taanis">
+        <h5><span>{{this.hagim[dayInfo.holydayNumber] + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.taanis">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.taanis; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.taanis, i, 'taanis')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.taanis; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.taanis.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.taanis = !notificationsButtonView.taanis">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.taanis" (emitNotification)="createNotification($event, newnotifications.taanis, notificationsButtonView.taanis)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- kidushLevana -->
+
+      <button *ngIf="this.dayInfo.kidushLevana" [class.kidushLevana]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.kidushLevana = !notificationsView.kidushLevana" [attr.aria-expanded]="!notificationsView.kidushLevana">
+        <h5><span>{{"KIDDUSH_LAVANA" + " "}}</span><span>{{this.dayInfo.kidushLevana | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.kidushLevana">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.kidushLevana; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.kidushLevana, i, 'kidushLevana')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.kidushLevana; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.kidushLevana.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.kidushLevana = !notificationsButtonView.kidushLevana">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.kidushLevana" (emitNotification)="createNotification($event, newnotifications.kidushLevana, notificationsButtonView.kidushLevana)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- parasha -->
+
+      <button *ngIf="this.dayInfo.parasha !== 0" [class.parasha]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.parasha = !notificationsView.parasha" [attr.aria-expanded]="!notificationsView.parasha">
+        <h5><span>{{getParshaName(this.dayInfo.parasha) + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.parasha">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.parasha; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.parasha, i, 'parasha')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.parasha; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.parasha.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.parasha = !notificationsButtonView.parasha">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.parasha" (emitNotification)="createNotification($event, newnotifications.parasha, notificationsButtonView.parasha)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- specialParasha -->
+
+      <button *ngIf="this.dayInfo.specialParasha !== 0" [class.parasha]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.specialParasha = !notificationsView.specialParasha" [attr.aria-expanded]="!notificationsView.specialParasha">
+        <h5><span>{{getParshaName(this.dayInfo.parasha) + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.specialParasha">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.specialParasha; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.specialParasha, i, 'specialParasha')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.specialParasha; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.specialParasha.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.specialParasha = !notificationsButtonView.specialParasha">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.specialParasha" (emitNotification)="createNotification($event, newnotifications.specialParasha, notificationsButtonView.specialParasha)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- shabbatMevorachim -->
+
+      <button *ngIf="this.dayInfo.shabbatMevorachim" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.shabbatMevorachim = !notificationsView.shabbatMevorachim" [attr.aria-expanded]="!notificationsView.shabbatMevorachim">
+        <h5><span>{{"SHABBAT_MEVORACHIM" + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.shabbatMevorachim">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.shabbatMevorachim; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.shabbatMevorachim, i, 'shabbatMevorachim')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.shabbatMevorachim; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.shabbatMevorachim.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.shabbatMevorachim = !notificationsButtonView.shabbatMevorachim">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.shabbatMevorachim" (emitNotification)="createNotification($event, newnotifications.shabbatMevorachim, notificationsButtonView.shabbatMevorachim)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- aseresYomei -->
+
+      <button *ngIf="this.dayInfo.aseresYomei" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.aseresYomei = !notificationsView.aseresYomei" [attr.aria-expanded]="!notificationsView.aseresYomei">
+        <h5><span>{{"ASSERES_YOMEI" + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.aseresYomei">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.aseresYomei; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.aseresYomei, i, 'aseresYomei')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.aseresYomei; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.aseresYomei.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.aseresYomei = !notificationsButtonView.aseresYomei">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.aseresYomei" (emitNotification)="createNotification($event, newnotifications.aseresYomei, notificationsButtonView.aseresYomei)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- isYomShishi -->
+
+      <button *ngIf="this.dayInfo.isYomShishi" [class.yomtov]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.isYomShishi = !notificationsView.isYomShishi" [attr.aria-expanded]="!notificationsView.isYomShishi">
+        <h5><span>{{"CANDLE_LIGHTING" + " "}}</span><span>{{this.ZmanimCalendar.getCandleLighting().ts | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.isYomShishi">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.isYomShishi; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.isYomShishi, i, 'isYomShishi')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.isYomShishi; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.isYomShishi.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.isYomShishi = !notificationsButtonView.isYomShishi">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.isYomShishi" (emitNotification)="createNotification($event, newnotifications.isYomShishi, notificationsButtonView.isYomShishi)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+      <!-- isShabbat -->
+
+      <button *ngIf="this.dayInfo.isShabbat" [class.yomtov]="true" type="button" class="btn btn-outline-primary"
+    (keydown.enter)="notificationsView.isShabbat = !notificationsView.isShabbat" [attr.aria-expanded]="!notificationsView.isShabbat">
+        <h5><span>{{"YATZIAT_SHABBAT" + " "}}</span><span>{{this.ZmanimCalendar.getSunset() | date: 'HH:mm:ss'}}</span></h5>   
+    </button>
+      <div id="collapseExample" [ngbCollapse]="notificationsView.isShabbat">
+        <div class="card">
+          <div class="card-body">
+            <div *ngFor="let notification of daynotifications.isShabbat; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeNotificationFromAndroid(daynotifications.isShabbat, i, 'isShabbat')">X</button>
+              <hr>
+            </div>
+            <div *ngFor="let notification of newnotifications.isShabbat; index as i;">
+              <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newnotifications.isShabbat.splice(i, 1)">X</button>
+              <hr>
+            </div>
+            <button type="button" class="btn btn-warning" (keydown.enter)="notificationsButtonView.isShabbat = !notificationsButtonView.isShabbat">Add notification</button>
+            <app-create-notification *ngIf="notificationsButtonView.isShabbat" (emitNotification)="createNotification($event, newnotifications.isShabbat, notificationsButtonView.isShabbat)"></app-create-notification>
+          </div>
+        </div>
+      </div>
+
+
+  <ng-container *ngIf="this.dayInfo.events">
+      <!-- <h4>{{this.isEvents()}}</h4>  -->
+    <div *ngFor="let event of userEvents; index as eventIndex;">
+        <button type="button" class="btn btn-outline-primary" (keydown.enter)="event.isCollapsed = !event.isCollapsed"
+                      [attr.aria-expanded]="!event.isCollapsed" aria-controls="collapseExample">
+              <h5><span>{{(event.title.length>15) ? (event.title | slice:0:15)+'..':(event.title)}}</span><span> {{event.date | date: "HH:mm"}}</span></h5>   
+        </button>
+        <div id="collapseExample" [ngbCollapse]="event.isCollapsed">
+          <div class="card">
+            <div class="card-body">
+              {{event.text}}
+              <div *ngFor="let notification of event.notifications; index as i;">
+                <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.removeUserNotificationFromAndroid(event.notifications, i)">X</button>
+                <hr>
+              </div>
+              <div *ngFor="let notification of newUserNotifications; index as i;">
+                <span>{{notification.unitsBefore + ' ' + notification.unitsType}}</span><button type="button" class="btn btn-danger close" (keydown.enter)="this.newUserNotifications.splice(i, 1)">X</button>
+                <hr>
+              </div>
+              <button type="button" class="btn btn-warning" (keydown.enter)="event.isNotificationsCollapsed = !event.isNotificationsCollapsed">Add notification</button>
+              <app-create-notification *ngIf="event.isNotificationsCollapsed" (emitNotification)="createUserNotification($event, newUserNotifications, event)"></app-create-notification>
+            </div>
+        </div> 
+      </div>
+    </div>
+  </ng-container> 
+<button type="button" class="btn btn-primary" autofocus  (keydown.enter)="closeDayView()">Close</button>
+</div>
+</ion-content>

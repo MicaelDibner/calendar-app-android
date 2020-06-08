@@ -1,0 +1,31 @@
+<div id="calendar">
+  <ngb-datepicker class="hebrew rtl" navigation='arrows' [showWeekdays]="true" #dp [(ngModel)]="model" [displayMonths]="1" [firstDayOfWeek]="7" [dayTemplate]="dt"
+                [dayTemplateData]="dayTemplateData" [footerTemplate]="footerTemplate">
+</ngb-datepicker>
+
+<ng-template #dt let-date let-today="today" let-data="data" let-selected="selected" let-currentMonth="currentMonth">
+  <div class="hebrew-day" [class.friday]="isFriday(date)" [class.saturday]="isSaturday(date)" 
+  [class.outside]="date.month !== currentMonth" [class.selected]="selected"
+  [class.yomTov]="(data['yomtov'])" [class.today]="today" [class.holyday]="(data['holyday'])" 
+  [class.roshhodesh]="(data['roshhodesh'])" [class.taanis]="(data['taanis'])" 
+  [class.chanukah]="(data['chanukah']) !== -1" [class.omer]="(data['aseresYomei'])">
+    <div class="gregorian-num"><span *ngIf="data['chanukah'] !== -1" class="holydayNumber" 
+      [class.outside]="date.month !== currentMonth">{{data['chanukah']}}</span>
+      <span *ngIf="data['omer'] !== -1" class="holydayNumber" [class.outside]="date.month !== currentMonth">
+        {{data['omer']}}</span> {{ data.gregorian.day + '/' + (data.gregorian.month) }}</div>
+    <div class="hebrew-num"> <span *ngIf="data['shabbatMevorachim']" class="holydayNumber" [class.outside]="date.month !== currentMonth">M</span>
+      <span *ngIf="data['kidushLevana']" class="holydayNumber" [class.outside]="date.month !== currentMonth">KL</span>{{ i18n.getDayNumerals(date) }}</div>
+    <div class="event">
+      <span *ngIf="data['events']">{{'E:' + data['events']}}</span>
+      <span *ngIf="data['notifications']">{{'N:' + data['notifications']}}</span>
+    </div>
+    </div>
+</ng-template>
+
+<ng-template #footerTemplate>
+  <div class="info">
+    <marquee behavior="scroll" direction="left">{{this.getHebrewDate()}}</marquee>
+    <div class="georgianDate">{{this.getGeorgianDate()}}</div>
+  </div>
+</ng-template>
+</div>

@@ -19,8 +19,104 @@
 @import '~@ionic/angular/css/display.css';
 
 /* Optional CSS utils that can be commented out */
-@import "~@ionic/angular/css/padding.css";
-@import "~@ionic/angular/css/float-elements.css";
-@import "~@ionic/angular/css/text-alignment.css";
-@import "~@ionic/angular/css/text-transformation.css";
-@import "~@ionic/angular/css/flex-utils.css";
+@import "~bootstrap/scss/bootstrap";
+
+html,
+body,
+  #calendar {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box;
+  }
+ ngb-datepicker {
+  align-self: stretch;
+  align-content: stretch;
+  width: 100% !important;
+  height: 100%;
+  }
+  ngb-dp-header {
+    padding-top: 1% !important;
+    height: 5%;
+  }
+  .ngb-dp-months{
+    height: 73%;
+  }
+  ngb-datepicker-month{
+    height: 18.2%;
+  }
+  .ngb-dp-month {
+    width: 100% ;
+    height: 100% ;
+    align-content: stretch;
+    align-self: stretch !important;
+}
+.ngb-dp-week.ngb-dp-weekdays {
+  height: auto !important;
+}
+.ngb-dp-weekday {
+  width: 100% !important;
+}
+.ngb-dp-week {
+  width: 100% !important;
+  height: 100% !important;
+  align-self: stretch !important;
+  align-items: stretch;
+}
+.ngb-dp-day{
+  align-self: stretch !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ngb-dp-week-number{
+  width: 100% !important;
+}
+
+// .ngb-dp-day.ngb-dp-today {
+//   background-color: yellow !important;
+//   z-index: 1;
+//   border-radius: 0.25rem; 
+// }
+.info {
+  font-size: larger;
+  text-align: center;
+  height: 20%;
+  position: relative; 
+  top: 0px;
+}
+
+.btn{
+  width: 100%;
+  margin-top: 0.8rem;
+}
+.btn.close{
+  margin-top: 0;
+  width: 1.8rem;
+}
+
+.form-control {
+  width: 100%;
+  margin-top: 0.8rem;
+}
+.screen{
+  width: 100%;
+  padding: 0.8rem 0.8rem 0.8rem 0.8rem;
+}
+
+.ngb-dp-month:first-child .ngb-dp-week{
+  padding-left: 0px !important;
+}
+.ngb-dp-month:last-child .ngb-dp-week{
+  padding-right: 0px !important;
+}
+.ngb-dp-week.ngb-dp-weekdays{
+  height: auto !important;
+}
+.ngb-dp-week-number.ngb-dp-weekday {
+  line-height: initial !important;
+}
+

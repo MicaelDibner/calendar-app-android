@@ -1,5 +1,7 @@
 {
   "name": "calendar-app-android",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

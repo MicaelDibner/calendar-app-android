@@ -1,0 +1,17 @@
+<form [formGroup]="notificationForm">
+  <div class="form-group">
+    <input formControlName="unitsBefore"
+    class="form-control"#numberInput autofocus placeholder="Enter a Value" >
+    <p *ngIf="notificationForm.get('unitsBefore').errors?.pattern" class="text-danger">Only numbers allowed</p>
+    <p *ngIf="notificationForm.get('unitsBefore').errors?.maxvalue" class="text-danger">Value can't be more than 60</p>
+  </div>
+  <div class="form-group">
+    <select #select formControlName="unitsType" class="form-control" placeholder="Choose units">
+      <option>Minutes before</option>
+      <option>Hours before</option>
+      <option>Days before</option>
+      <option>Months before</option>
+    </select>
+  </div>
+  <button type="submit" [disabled]="!notificationForm.valid" class="btn btn-info" (keydown.enter)="onSubmit()">Create notification</button>
+</form>
