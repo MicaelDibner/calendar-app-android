@@ -3,18 +3,29 @@ import { NavController } from '@ionic/angular';
 import { FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 import { INewNotification } from 'src/app/core/model/INewNotification';
 
+/**
+ * Page for Creating new Event; type IEvent
+ */
+
 @Component({
   selector: 'app-create-notification',
   templateUrl: './create-notification.component.html',
   styleUrls: ['./create-notification.component.scss'],
 })
 export class CreateNotificationComponent implements OnInit {
+/**
+ * Event emiter for emitting INewNotification to CreateEventComponent
+ */
   @Output() emitNotification = new EventEmitter<INewNotification>();
 
   notificationForm = new FormGroup({
     unitsBefore: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), this.maxValueValidator()]),
     unitsType: new FormControl('', Validators.required),
   });
+
+/**
+ * Custom validator for max number value for text-type input
+ */
 
   maxValueValidator(): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} | null => {
@@ -27,6 +38,10 @@ export class CreateNotificationComponent implements OnInit {
   constructor(public navCtrl: NavController) { }
 
   ngOnInit() {}
+
+/**
+ * Emit INewNotification to CreateEventComponent
+ */
 
   onSubmit() {
     console.log(this.notificationForm.value);

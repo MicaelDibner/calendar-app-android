@@ -16,6 +16,14 @@ import { INewNotification } from '../core/model/INewNotification';
 import { NotificationsService } from '../core/services/notifications.service';
 import { IDayViewNewNotifications } from '../core/model/IDayViewNewNotifications';
 
+/**
+ * Page for Day View with custom dayTemplateData
+ * General structure - receiving all events for day from storage
+ * Receiving dayInfo from Datepicker (calculated in datepicker)
+ * Creating separate array only for user
+ * If user added new notifications - add new notifications in StorageService and android
+ */
+
 @Component({
   selector: 'app-day-view',
   templateUrl: './day-view.page.html',
@@ -23,13 +31,16 @@ import { IDayViewNewNotifications } from '../core/model/IDayViewNewNotifications
   providers: [NgbDatepickerI18nHebrew, DatePipe]
 })
 export class DayViewPage implements OnInit {
+  // model from SelectedDateService (contains model and hebrewDateModel)
   dates: IDates;
   model: NgbDateStruct;
   dayInfo: IDayInfoModel;
   hebrewDateModel: NgbDateStruct;
+  // all events (user events and holyday events) from EventsService
   events: IEvent[];
   userEvents: IEvent[];
   ZmanimCalendar = new ZmanimCalendar();
+  // array for exist notifications, added in day view
   daynotifications: IDayViewNotifications = {
       yomtov: [] as INotification[],
       holyday: [] as INotification[],
@@ -45,6 +56,7 @@ export class DayViewPage implements OnInit {
       isYomShishi: [] as INotification[],
       isShabbat: [] as INotification[]
   };
+  // array for new notifications, added in day view
   newnotifications: IDayViewNewNotifications = {
     yomtov: [] as INewNotification[],
     holyday: [] as INewNotification[],
@@ -60,7 +72,7 @@ export class DayViewPage implements OnInit {
     isYomShishi: [] as INewNotification[],
     isShabbat: [] as INewNotification[]
 };
-
+  // array for new notifications for user events (ine array for all user events)
   newUserNotifications: INewNotification[] = [];
 
   hagim = {
@@ -127,6 +139,7 @@ export class DayViewPage implements OnInit {
       isYomShishi: false,
       isShabbat: false };
 
+  // types of holyday
   notificationsNameArr = [
       'yomtov',
       'holyday',
@@ -151,6 +164,12 @@ export class DayViewPage implements OnInit {
               public datePipe: DatePipe,
               ) { }
 
+/**
+ * Refresh model dates and day info
+ * getting date model if model was emitted to SelectedDateServise
+ * getting all events for date (user and not user)
+ */
+
   ngOnInit(): void {
     this.getDataString();
     this.dayInfo = this.selectedDateServise.selectedDateDayInfoSubscribtion.getValue();
@@ -162,6 +181,10 @@ export class DayViewPage implements OnInit {
     console.log(this.daynotifications);
   }
 
+/**
+ * Refresh model dates and day info
+ */
+
   ionViewWillEnter(): void{
     this.getDataString();
     this.getEvents();
@@ -169,9 +192,18 @@ export class DayViewPage implements OnInit {
     this.fillNotifications();
   }
 
+/**
+ * Emit new notification and new NOT user events
+ */
+
   ionViewWillLeave(): void{
     this.emitNotificationsAndEvents();
   }
+
+/**
+ * Clearing component objects
+ */
+
   clearData() {
     this.daynotifications = {
       yomtov: [] as INotification[],
@@ -205,6 +237,10 @@ export class DayViewPage implements OnInit {
 };
   }
 
+/**
+ * Filling arrays for exist notifications for events
+ */
+
   fillNotifications() {
     if (this.events !== undefined) {
     this.daynotifications = {
@@ -223,6 +259,11 @@ export class DayViewPage implements OnInit {
     isShabbat: this.getNotificationsForHolyday('isShabbat'),
   }; }
 }
+
+/**
+ * Method that fill notifications for all not user events in the day
+ * holydayName from this.notificationsNameArr
+ */
   getNotificationsForHolyday(holydayName: string): INotification[] {
     const notificationsArray: INotification[] = new Array();
     this.events.forEach(value => {
@@ -237,10 +278,18 @@ export class DayViewPage implements OnInit {
     } else { return null; }
   }
 
+/**
+ * Add one new notification from view to special array of holyday
+ */
+
   createNotification(notification: INewNotification, arr: INewNotification[], state: boolean) {
     arr.push(notification);
     state = !state;
   }
+
+/**
+ * Add one new notification from view to new user notifications array
+ */
 
   createUserNotification(notification: INewNotification, arr: INewNotification[], event: IEvent) {
     notification.date = event.date;
@@ -249,11 +298,20 @@ export class DayViewPage implements OnInit {
     event.isNotificationsCollapsed = !event.isNotificationsCollapsed;
   }
 
+/**
+ * Method that start when calls this.ionViewWillLeave()
+ * part 1 = creating INotification from all INewNotification 's in this.newnotifications
+ * part 2 = send iNotification[] to notificationsService (add notifications to Android)
+ * part 2.1 = generateUserNotifications for this.userEvents (if user added new notifications for user events)
+ * part 3 =full rewrite day data in StorageService -> IonicStorage
+ */
+
   emitNotificationsAndEvents() {
     console.log(this.newnotifications);
     console.log('check notifications');
     let settedDate = new Date(this.ZmanimCalendar.getSunset().ts);
     console.log(settedDate);
+    // part 1 = creating INotification from all INewNotification 's in this.newnotifications
     this.notificationsNameArr.forEach(value => {
       if (this.newnotifications[value].length !== 0) {
         console.warn(value + ' new notifications ' + this.newnotifications[value].length);
@@ -270,15 +328,24 @@ export class DayViewPage implements OnInit {
           default:
             break;
         }
+        // part 2 = send iNotification[] to notificationsService (add notifications to Android)
         this.generateNotifications(value, settedDate);
         } else  { console.log('no new events for: ' + value); }
     });
     if (this.newUserNotifications.length > 0) {
+      // part 2.1 = generateUserNotifications for this.userEvents
       this.generateUserNotifications(this.newUserNotifications);
     } else  { console.log('no new events for user'); }
+    // part 3 =full rewrite day data in StorageService -> IonicStorage with new notifications in events in the day
     this.storageService.setEventsForDate((this.model.year + '-' + this.model.month + '-' + this.model.day), this.events);
     this.clearData();
   }
+
+
+/**
+ * Method generate notifications for NOT user events from view type INewNotification to type INotification that suitable for android
+ * new notifications from this.newnotifications
+ */
 
   generateNotifications(typename: string, settedDate: Date) {
       console.log('create notifications for:' + typename);
@@ -316,10 +383,37 @@ export class DayViewPage implements OnInit {
       console.log('All ' + typename + 'new generated notifications: ');
       console.log(eventNotifications);
       });
-      if (this.events !== undefined){ this.addNotificationsToExistEvents(typename, settedDate, eventNotifications);
-      } else {this.createEventForNotifications(typename, settedDate, eventNotifications); }
+      if (this.events !== undefined){ 
+        // if holyday events have notifications and have event with name of holyday in the database
+        this.addNotificationsToExistEvents(typename, settedDate, eventNotifications);
+      } else {
+        // if holyday events not have notifications added before
+        this.createEventForNotifications(typename, settedDate, eventNotifications); }
+      // adding notifications to android system
       this.notificationsService.createNotifications(eventNotifications);
   }
+
+/**
+ * Method put name of holyday to notification text
+ */
+
+  public generateNotificationName(typename: string): string {
+    console.warn(typename);
+    let result;
+    const holydayNames = ['holyday', 'yomtov', 'taanis'];
+    holydayNames.forEach(value => {
+      const res = value.localeCompare(typename);
+      if (res === 0) {
+        result = this.hagim[this.dayInfo.holydayNumber];
+      } else { console.warn(typename); result = typename; }
+    });
+    return result;
+  }
+
+/**
+ * Method generate notifications for user events from view type INewNotification to type INotification that suitable for android
+ * new notifications from  this.newUserNotifications
+ */
 
   generateUserNotifications(newUserNotifications: INewNotification[]) {
     const eventNotifications = new Array();
@@ -363,24 +457,17 @@ export class DayViewPage implements OnInit {
     this.notificationsService.createNotifications(eventNotifications);
     }
 
-  public generateNotificationName(typename: string): string {
-    console.warn(typename);
-    let result;
-    const holydayNames = ['holyday', 'yomtov', 'taanis'];
-    holydayNames.forEach(value => {
-      const res = value.localeCompare(typename);
-      if (res === 0) {
-        result = this.hagim[this.dayInfo.holydayNumber];
-      } else { console.warn(typename); result = typename; }
-    });
-    return result;
-  }
+/**
+ * Method add notifications if day have events. If day not have event with holyday name >
+ * method will generate new event with title of hollyday name
+ */
 
   addNotificationsToExistEvents(typename: string, settedDate: Date, eventNotifications: INotification[]) {
     console.warn('step 3 update notifications for: ' + typename);
     let indexArr;
     let event;
     this.events.forEach((value, index) => {
+      // check if event with title=typename exist in this.events
       if (this.checkIfHolydayEventExist(typename, value)) {
         indexArr = index;
         event = value;
@@ -390,6 +477,7 @@ export class DayViewPage implements OnInit {
       console.warn('step 4 adding notifications for: ' + typename);
       this.events[indexArr].notifications.push(...eventNotifications);
     } else {
+        // if event with title=typename not exist will create new event in this.events
         console.warn('step 4 creating new event for: ' + typename);
         const event = {
           date: settedDate,
@@ -405,6 +493,8 @@ export class DayViewPage implements OnInit {
       }
     }
 
+  // check if event with title=typename exist in this.events
+
   checkIfHolydayEventExist(typename: string, event: IEvent): boolean {
    let res = false;
    const result = event.title.localeCompare(typename);
@@ -414,6 +504,8 @@ export class DayViewPage implements OnInit {
         }
    return res;
   }
+
+  // if event with title=typename not exist will create new event in this.events
 
   createEventForNotifications(typename: string, settedDate: Date, eventNotifications: INotification[]) {
     console.warn('step 3 creating new event entity for ' + typename);
@@ -429,6 +521,11 @@ export class DayViewPage implements OnInit {
     this.events.push(event);
   }
 
+/**
+ * Method will delete exist notification from android system(not usable for this.newnotifications)
+ * and delete notification from notifications array in event
+ */
+
   removeNotificationFromAndroid(arr: INotification[], notificationIndex: number, holydayName: string){
     const notification = arr[notificationIndex];
     console.log(notification);
@@ -436,6 +533,11 @@ export class DayViewPage implements OnInit {
     this.notificationsService.deleteNotification(notification.id);
     this.removeNotificationFromArray(notification, holydayName);
   }
+
+/**
+ * Method will delete exist notification from android system(not usable for this.newnotifications)
+ * and delete notification from notifications array in event
+ */
 
   removeUserNotificationFromAndroid(arr: INotification[], notificationIndex: number){
     const notification = arr[notificationIndex];
@@ -464,9 +566,17 @@ export class DayViewPage implements OnInit {
     }
   }
 
+/**
+ * Method get string from Parsha enum
+ */
+
   getParshaName(num: number){
     return Parsha[num];
   }
+
+/**
+ * Method get all events for day from StorageService
+ */
 
   getEvents() {
     this.events = this.storageService.getEventsForDate(this.model.year + '-' + this.model.month + '-' + this.model.day);
@@ -474,6 +584,11 @@ export class DayViewPage implements OnInit {
     console.log(this.events);
     this.getUserEvents();
   }
+
+/**
+ * Method take userEvents from this.events
+ */
+
   getUserEvents() {
     if (this.events !== undefined && this.dayInfo.events) {
       this.userEvents = new Array();
@@ -487,6 +602,11 @@ export class DayViewPage implements OnInit {
     }
   }
 
+
+/**
+ * Method get dates in NgbDateStruct format from SelectedDateServise
+ */
+
   getDataString() {
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.georgianDate;
@@ -497,20 +617,35 @@ export class DayViewPage implements OnInit {
     console.log('zmanim date: ' + (this.ZmanimCalendar.getDate()).toLocaleString());
   }
 
+/**
+ * Method return date string in hebrew language and hebrew format (5780 year...) for date
+ */
 
   getHebrewDate(): string {
     return this.i18n.getDayNumerals(this.hebrewDateModel) + '-' + this.i18n.getMonthShortName(this.hebrewDateModel.month)
     + '-' + this.i18n.getYearNumerals(this.hebrewDateModel.year);
   }
 
+/**
+ * Method return date string in gregorian format
+ */
+
   getGeorgianDate(): string {
     return this.model.year + '-' + this.model.month + '-' + this.model.day;
   }
+
+/**
+ * Method return date string in number format and hebrew format (5780 year...) for date
+ */
 
   getHebrewDateNumbers(): string {
     return this.hebrewDateModel.year + '-' + this.hebrewDateModel.month + '-' +
     this.hebrewDateModel.day;
   }
+
+/**
+ * Check if events exist
+ */
 
   isEvents(): string{
     if (this.userEvents === undefined) {
@@ -527,6 +662,9 @@ export class DayViewPage implements OnInit {
     this.navCtrl.navigateForward(['menu']);
   }
 
+/**
+ * Method close view
+ */
   closeDayView(){
     this.navCtrl.back();
   }

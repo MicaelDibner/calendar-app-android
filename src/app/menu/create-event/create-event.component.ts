@@ -10,6 +10,10 @@ import { NavController } from '@ionic/angular';
 import { DatePipe } from '@angular/common';
 import { NotificationsService } from 'src/app/core/services/notifications.service';
 
+/**
+ * Page for Creating new Event; type IEvent
+ */
+
 @Component({
   selector: 'app-create-event',
   templateUrl: './create-event.component.html',
@@ -35,6 +39,9 @@ export class CreateEventComponent implements OnInit {
               private datePipe: DatePipe, private notificationsService: NotificationsService) { }
 
   ngOnInit() {
+/**
+ * Creating new notification for Event 1 hour before for all new events
+ */
     const basicNotification = {
       unitsType: 'Hours before',
       unitsBefore: 1
@@ -42,14 +49,26 @@ export class CreateEventComponent implements OnInit {
     this.notifications.push(basicNotification);
   }
 
-  addNotification(){
-    this.navCtrl.navigateForward(['menu/createNotification']);
-  }
+/**
+ * Redirect after succesfull creating of notification
+ */
+
+  // addNotification(){
+  //   this.navCtrl.navigateForward(['menu/createNotification']);
+  // }
+
+/**
+ * Creating notification and close CreateNotificationComponent
+ */
 
   createNotification(notification: INewNotification) {
     this.notifications.push(notification);
     this.addEventOpen = !this.addEventOpen;
   }
+
+/**
+ * Method calls native android datepicker for date
+ */
 
   selectADate(){
     this.datePicker.show({
@@ -60,6 +79,10 @@ export class CreateEventComponent implements OnInit {
       err => console.log('Error occurred while getting date: ', err)
     );
   }
+
+/**
+ * Method calls native android datepicker for time
+ */
 
   selectATime(){
     this.datePicker.show({
@@ -72,14 +95,22 @@ export class CreateEventComponent implements OnInit {
     );
   }
 
+/**
+ * Submitting the form, create INotifications from INewNotification[],
+ * add all new notifications to new event array and create new IEvent in
+ * EventsService.createEvent
+ */
+
   onSubmit() {
     console.log(this.eventForm.value);
     console.log('creating event');
+    // setting Date date and Date time for event from two datepicker dates
     let settedDate = new Date(Date.parse(this.eventForm.value['date']));
     let settedTime = new Date(Date.parse(this.eventForm.value['time']));
     settedDate.setHours(settedTime.getHours());
     settedDate.setMinutes(settedTime.getMinutes());
     console.log(settedDate instanceof Date);
+    // Creating new notifications in format INotification
     this.notifications.forEach(value => {
       const notificationDate = new Date(settedDate);
       switch (value.unitsType) {

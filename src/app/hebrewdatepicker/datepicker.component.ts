@@ -53,6 +53,10 @@ const hagim = {
   32: 'YOM_YERUSHALAYIM'
 };
 
+/**
+ * Page for Calendar View with custom dayTemplateData
+ */
+
 @Component({
   selector: 'app-datepicker',
   templateUrl: './datepicker.component.html',
@@ -71,6 +75,7 @@ export class DatepickerComponent implements OnInit {
   gregorianModel: NgbDateStruct;
   dates: IDates;
   jewishCalendar = new JewishCalendar();
+  // handlers for Renderer2
   private button1Handler;
   private button3Handler;
   private buttonEnterHandler;
@@ -81,11 +86,13 @@ export class DatepickerComponent implements OnInit {
               private selectedDateServise: SelectedDateService, public navCtrl: NavController,
               public eventsService: EventsService, private renderer: Renderer2,
               private datePipe: DatePipe) {
+    // binding day data
     this.dayTemplateData = this.dayTemplateData.bind(this);
     this.jewishCalendar.setInIsrael(true);
     this.jewishCalendar.setUseModernHolidays(false);
   }
   ngOnInit(): void {
+    // creating model instance for NgbDatepicker
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     if (this.dates === null) {
       this.model = this.calendar.getToday();
@@ -104,16 +111,31 @@ export class DatepickerComponent implements OnInit {
   //   this.datepicker.focus();
   // }
 
+/**
+ * Method runs when user come back to screen (custom lifecycle hook for angular), developed by Ionic
+ * getting date model if model was emitted to SelectedDateServise
+ */
+
   ionViewWillEnter(): void{
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.hebrewDate;
+    if (this.model === undefined) {
+      this.model = new NgbDate(this.dates.hebrewDate.year,
+        this.dates.hebrewDate.month,
+        this.dates.hebrewDate.day);
+    }
     this.datepicker.focusDate(this.model);
     this.datepicker.focusSelect();
     this.datepicker.focus();
+    // start listen the handlers
     this.button1Handler = this.renderer.listen('document', 'keydown.1', event => this.onStar());
     this.button3Handler = this.renderer.listen('document', 'keydown.3', event => this.onGrid());
     this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', event => this.onEnter());
   }
+
+/**
+ * Method runs when user leave screen (custom lifecycle hook for angular), developed by Ionic
+ */
 
   ionViewWillLeave(): void{
     this.emitDate(this.model);
@@ -122,13 +144,22 @@ export class DatepickerComponent implements OnInit {
     this.buttonEnterHandler();
   }
 
+// button 3 handler
+
   onGrid() {
     this.datepicker.onNavigateEvent(1);
   }
 
+// button 1 handler
+
   onStar() {
     this.datepicker.onNavigateEvent(0);
   }
+
+// button Enter handler (In CustomKeybordServise no default eventPropagination())
+/**
+ * Method emits this.dayTemplateData to SelectedDateServise.selectedDateDayInfoSubscribtion
+ */
   onEnter() {
     const modelNgbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
     const dayData = this.dayTemplateData(modelNgbDate) as IDayInfoModel;
@@ -158,8 +189,16 @@ export class DatepickerComponent implements OnInit {
     this.navCtrl.navigateForward('menu');
   }
 
+/**
+ * Methods check number of days for setting css classes
+ */
+
   isFriday = (date: NgbDate) =>  this.calendar.getWeekday(date) === 5;
   isSaturday = (date: NgbDate) =>  this.calendar.getWeekday(date) === 6;
+
+/**
+ * Method add custom data to let-data="data" in day-template #dt
+ */
 
   dayTemplateData(date: NgbDate) {
     const gregorianDate = (this.calendar as NgbCalendarHebrew).toGregorian(date);
@@ -177,7 +216,7 @@ export class DatepickerComponent implements OnInit {
       (gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
       roshhodesh: this.jewishCalendar.isRoshChodesh(),
       holydayNumber: this.jewishCalendar.getYomTovIndex(),
-      taanis: this.getTaanisName(this.jewishCalendar.isTaanis(), date),
+      taanis: this.getTaanisName(this.jewishCalendar.isTaanis()),
       kidushLevana:  this.getKidushLavana(gregorianDate.day),
       parasha: this.jewishCalendar.getParsha(),
       specialParasha: this.jewishCalendar.getSpecialShabbos(),
@@ -196,7 +235,7 @@ export class DatepickerComponent implements OnInit {
     } else { return false;}
   }
 
-  getTaanisName(arg0: boolean, date: NgbDate) {
+  getTaanisName(arg0: boolean) {
     if ( arg0 === true) {
     const hlNumber = this.jewishCalendar.getYomTovIndex();
     return hagim[+hlNumber]; } else {return false; }
@@ -222,6 +261,11 @@ export class DatepickerComponent implements OnInit {
     //   }
     // }
   }
+
+
+/**
+ * Method return custom string for day in the <marquee> tag
+ */
   getHebrewDate(): string {
     let holyday = '';
     let events = '';
@@ -267,6 +311,12 @@ export class DatepickerComponent implements OnInit {
     return holyday + events + parasha + molad;
   }
 
+/**
+ * Method convert date from hebrew format to gregorian format
+ */
+
+ // TODO: ake data from dayTemplate
+
   getGeorgianDate(): string {
     const modelNgbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
     const data = {gregorian: (this.calendar as NgbCalendarHebrew)
@@ -275,10 +325,18 @@ export class DatepickerComponent implements OnInit {
     + ' ' + data.gregorian.year).toString();
   }
 
+/**
+ * Method set model to today if model is undefined
+ */
+
   selectToday() {
     this.model = this.calendar.getToday();
     this.emitDate(this.model);
   }
+
+/**
+ * Method conver hebrew model to gregorian model
+ */
 
   convertGregorianModel(date: NgbDateStruct): NgbDateStruct {
     const modelNgbDate = new NgbDate(date.year, date.month, date.day);
@@ -286,6 +344,10 @@ export class DatepickerComponent implements OnInit {
       .toGregorian(modelNgbDate);
     return data;
   }
+
+/**
+ * Method emit hebrew and gregorian models to SelectedDateServise
+ */
 
   emitDate(model: NgbDateStruct) {
     this.dates = {

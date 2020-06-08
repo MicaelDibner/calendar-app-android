@@ -6,6 +6,9 @@ import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
+/**
+ * Page calculates times of prays for date, received from SelectedDateService
+ */
 
 @Component({
   selector: 'app-times-view',
@@ -18,6 +21,10 @@ export class TimesViewPage implements OnInit {
   model: NgbDateStruct;
   complexZmanimCalendar = new ComplexZmanimCalendar();
 
+/**
+ * Setting geolocation and date
+ */
+
   ngOnInit(): void {
     this.getDataString();
     const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
@@ -29,6 +36,10 @@ export class TimesViewPage implements OnInit {
     this.getDataString();
   }
 
+/**
+ * Receiving date from SelectedDateService, and setting date to complexZmanimCalendar instance
+ */
+
   getDataString() {
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.georgianDate;
@@ -37,6 +48,10 @@ export class TimesViewPage implements OnInit {
     console.log(date);
     this.complexZmanimCalendar.setDate(date);
   }
+
+/**
+ * Generate string for received date
+ */
 
   getGeorgianDate(): string {
     return this.model.day  + ' ' + this.model.month  + ' ' + this.model.year;

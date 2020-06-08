@@ -5,6 +5,10 @@ import { NotificationsService } from './notifications.service';
 import { INotification } from '../model/INotification';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 
+/**
+ * Service that handle events, fill notifications with NotificationsService and send them to StorageService
+ */
+
 @Injectable({
   providedIn: 'root'
 })
@@ -13,11 +17,19 @@ export class EventsService {
   constructor(private storageService: StorageService, private notifications: NotificationsService) {
    }
 
+/**
+ * Method that send event to StorageService, fill notifications in NotificationsService
+ */
+
   createEvent(event: IEvent){
     this.storageService.setEvent(event);
     this.notifications.createNotifications(event.notifications);
   }
-  
+
+/**
+ * Method that create NOT user event (from Day-view notifications)
+ */
+
   createHolydayEvent(holydayname: string, time: Date, date: NgbDateStruct, notifications: INotification[]){
     let eventDate = new Date();
     eventDate.setFullYear(date.year, date.month - 1, date.day);
@@ -34,6 +46,11 @@ export class EventsService {
     this.storageService.setEvent(event);
   }
 
+/**
+ * Method that create test event
+ */
+
+
   setEvents(){
     const event = {
       date: new Date(new Date().setMonth((Math.random() * Math.floor(12)))),
@@ -45,6 +62,10 @@ export class EventsService {
     this.storageService.setEvent(event);
   }
 
+/**
+ * Method that send only number of events in date for Datepicker view
+ */
+
   getEventCalendarView(date: string) {
     let userEvents = 0;
     if (this.storageService.events.has(date)) {
@@ -55,6 +76,11 @@ export class EventsService {
       return userEvents;
     } else {return false; }
   }
+
+/**
+ * Method that send only number of notifications in date for Datepicker view
+ */
+
   getNotificationsNumberCalendarView(date: string) {
     let notificationsNumber = 0;
     if (this.storageService.events.has(date)) {
@@ -65,6 +91,10 @@ export class EventsService {
       return notificationsNumber;
     } else {return false; }
   }
+
+/**
+ * Method that send event titles for date for Datepicker view
+ */
 
   getEventDescriptionsCalendarView(date: string) {
     let events = '';

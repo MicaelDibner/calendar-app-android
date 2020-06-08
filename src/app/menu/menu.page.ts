@@ -9,6 +9,10 @@ import { NotificationsService } from '../core/services/notifications.service';
 import { INotification } from '../core/model/INotification';
 import { StorageService } from '../core/services/storage.service';
 
+/**
+ * Page provide menuModule with children routes
+ */
+
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.page.html',
@@ -35,6 +39,10 @@ export class MenuPage implements OnInit {
     this.ngZone.run(() => this.router.navigate(commands)).then();
   }
 
+/**
+ * Method calls native android datepicker for date
+ */
+
   selectADate(){
   this.datePicker.show({
     date: new Date(),
@@ -45,6 +53,11 @@ export class MenuPage implements OnInit {
     err => console.log('Error occurred while getting date: ', err)
   );
   }
+
+/**
+ * Method calls native android notification and create test notification
+ */
+
   makeNotification() {
     const notification = {
       id: 1,
@@ -55,19 +68,34 @@ export class MenuPage implements OnInit {
     this.notifications.createNotification(notification);
   }
 
+/**
+ * Open CreateEventComponent
+ */
   createEvent(){
     this.router.navigate(['menu/createEvent']);
   }
+
+/**
+ * Method conver JS Date to NgbDate format for SelectedDateService
+ */
 
   convertDateToModel(date: any) {
     const model = new NgbDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
     this.emitDate(model);
   }
 
+/**
+ * Method emit Date.now() to SelectedDateService
+ */
+
   selectToday() {
     this.myDate = new Date();
     this.convertDateToModel(this.myDate);
   }
+
+/**
+ * Method emit NgbDate to SelectedDateService
+ */
 
   emitDate(model: NgbDate) {
     this.dates = {
@@ -78,13 +106,25 @@ export class MenuPage implements OnInit {
     this.location.back();
   }
 
+/**
+ * Method calls method in StorageService for writing text file
+ */
+
   writeFile() {
     this.storageService.setFileInStorage();
   }
 
+/**
+ * Method calls method in StorageService for reading text file
+ */
+
   readFile() {
     this.storageService.getFileFromStorage();
   }
+
+/**
+ * Method calls method in StorageService for clearing database
+ */
 
   deleteDatabase() {
     this.storageService.removeDatabase();

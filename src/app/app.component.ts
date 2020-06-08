@@ -23,6 +23,12 @@ export class AppComponent {
     + ' ' + window.outerHeight);
   }
 
+
+/**
+ * 1) Receive stste of platform from Ionic
+ * 2) Download events from storageService
+ * 3) Hide splashscreen
+ */
   initializeApp() {
     this.platform.ready().then(() => {
     this.storageService.getEventsFromDB().then(() => {
@@ -32,7 +38,10 @@ export class AppComponent {
       this.router.navigate(['hebrewdatepicker']);
     }); });
   }
-
+/**
+ * 1) Start listen menu button
+ * Contains cardova handlers for menubutton and backbutton
+ */
   @HostListener('document:menubutton')
   onMenu() {
   }

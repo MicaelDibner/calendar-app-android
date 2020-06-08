@@ -2,9 +2,10 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
-import { SelectedDateService } from '../core/services/selected-date.service';
-import { IDates } from '../core/model/IDates';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+
+/**
+ * Page calculates difference between times of prays and real time
+ */
 
 @Component({
   selector: 'app-today-times-view',
@@ -43,12 +44,18 @@ export class TodayTimesViewPage implements OnInit {
   shaahZmanis16Point1Degrees: string;
   shaahZmanisGra: string;
 
-  constructor(private router: Router, private selectedDateServise: SelectedDateService) { }
+  constructor(private router: Router) { }
+
+/**
+ * Start calculation into JS native setInterval method
+ */
 
   ngOnInit(): void {
+    // setting date to ComplexZmanimCalendar instance
     this.complexZmanimCalendar.setDate(this.date);
     const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
     779.46, 'Asia/Jerusalem');
+    // setting geolocation to ComplexZmanimCalendar instance
     this.complexZmanimCalendar.setGeoLocation(geoLocation);
     this.refresh = setInterval(() => {
       this.date = new Date();
@@ -86,9 +93,25 @@ export class TodayTimesViewPage implements OnInit {
     }, 1000);
   }
 
+/**
+ * Refresh a realtime date for ComplexZmanimCalendar instance
+ */
+
+  ionViewWillEnter(): void{
+    this.complexZmanimCalendar.setDate(this.date);
+  }
+
+/**
+ * Stop calculation for JS native setInterval method
+ */
+
   ionViewWillLeave(): void{
     clearInterval(this.refresh);
   }
+
+/**
+ * Calculate difference between date numbers into string format
+ */
 
   timeConversion(duration: number) {
     const portions: string[] = [];
@@ -110,10 +133,6 @@ export class TodayTimesViewPage implements OnInit {
       portions.push(seconds + 's');
     } else if (seconds < 0) {return 'Pass'; }
     return portions.join(' ');
-  }
-
-  ionViewWillEnter(): void{
-    this.complexZmanimCalendar.setDate(this.date);
   }
 
   getGeorgianDate(): string {

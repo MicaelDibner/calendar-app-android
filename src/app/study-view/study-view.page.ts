@@ -6,6 +6,10 @@ import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { Rambam1JSON } from '../core/model/Rambam1JSON';
 
+/**
+ * Page shows data about stydies for date, received from SelectedDateService
+ */
+
 @Component({
   selector: 'app-study-view',
   templateUrl: './study-view.page.html',
@@ -33,21 +37,33 @@ export class StudyViewPage implements OnInit {
 
   constructor(private router: Router, private selectedDateServise: SelectedDateService) { }
 
+/**
+ * Setting geolocation
+ */
+
   ngOnInit(): void {
     const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
     779.46, 'Asia/Jerusalem');
   }
+/**
+ * Setting emitted date from SelectedDateService
+ */
 
   ionViewWillEnter(): void{
     this.getDataString();
   }
+
+/**
+ * Changing date format for Rambam1JSON class
+ */
+
   getDay(day: number) {
     if (day < 10) { return '0' + day; }
   }
 
-  getGregorianDate(){
-    this.model.year, this.model.month - 1, this.model.day
-  }
+/**
+ * Setting date from SelectedDateService and setting date for JewishCalendar instance
+ */
 
   getDataString() {
       this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
@@ -61,6 +77,11 @@ export class StudyViewPage implements OnInit {
       console.log('data setted: ' + this.time);
       this.getDataDay();
   }
+
+/**
+ * Setting date from JewishCalendar for component strings
+ */
+
   getDataDay() {
     console.log('get data started');
     this.chalakim = this.jewishCalendar.getMolad().getMoladChalakim();

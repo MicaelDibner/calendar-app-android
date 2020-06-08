@@ -1,3 +1,7 @@
+/**
+ * Constant contains pairs key-value for studys view
+ */
+
 export const Rambam1JSON = {
 2020907: 'קריאת שמע',
 2020908: 'קריאת שמע',
