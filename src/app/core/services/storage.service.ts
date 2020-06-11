@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { IEvent } from '../model/IEvent';
 import { File } from '@ionic-native/file/ngx';
 import { ToastController } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service for working with Storage - Ionic Storage. In documentation prefer se only one instanse of Storage
@@ -15,7 +16,7 @@ import { ToastController } from '@ionic/angular';
 })
 export class StorageService {
   public events = new Map<string, IEvent[]>();
-  constructor(private storage: Storage, private file: File, public toastController: ToastController) {}
+  constructor(private storage: Storage, private file: File, public toastController: ToastController, public translate: TranslateService) {}
 
 /**
  * Method take event Map from Ionic Storage
@@ -48,7 +49,7 @@ export class StorageService {
   removeDatabase() {
     this.storage.clear();
     this.events.clear();
-    this.presentToast('database been clear');
+    this.presentToast(this.translate.instant('DATABASE_HAS_BEEN_CLEAR'));
   }
 
 /**
@@ -103,7 +104,7 @@ export class StorageService {
       const file = JSON.stringify(myFile);
       this.file.writeFile(this.file.dataDirectory, 'text.txt', file, {replace: true}).then(() => {
           console.log('file added');
-          this.presentToast('Your settings have been saved.');
+          this.presentToast(this.translate.instant('YOUR_SETTINGS_HAS_BEEN_SAVED'));
       })
       .catch((err) => {
         console.error(err);
@@ -126,7 +127,7 @@ export class StorageService {
           this.storage.set(k, newFile[k]);
           this.events.set(k, newFile[k]);
       });
-        this.presentToast('Your settings have been downloaded.');
+        this.presentToast(this.translate.instant('YOUR_SETTINGS_HAS_BEEN_DOWNLOADED'));
     });
     }
 

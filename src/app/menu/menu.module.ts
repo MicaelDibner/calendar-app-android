@@ -11,6 +11,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { CreateNotificationComponent } from './create-notification/create-notification.component';
 
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -18,7 +22,8 @@ import { CreateNotificationComponent } from './create-notification/create-notifi
     IonicModule,
     MenuPageRoutingModule,
     NgbModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TranslateModule.forChild()
   ],
   declarations: [MenuPage, CreateEventComponent, CreateNotificationComponent],
   exports: [CreateNotificationComponent]

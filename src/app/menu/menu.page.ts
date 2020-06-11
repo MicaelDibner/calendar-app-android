@@ -8,6 +8,7 @@ import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { NotificationsService } from '../core/services/notifications.service';
 import { INotification } from '../core/model/INotification';
 import { StorageService } from '../core/services/storage.service';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Page provide menuModule with children routes
@@ -30,7 +31,8 @@ export class MenuPage implements OnInit {
   constructor(private router: Router, private ngZone: NgZone, public location: Location,
               private selectedDateServise: SelectedDateService, private hebrewCalendar: NgbCalendarHebrew,
               private datePicker: DatePicker, private notifications: NotificationsService,
-              private storageService: StorageService) { }
+              private storageService: StorageService, public translate: TranslateService) {
+              }
 
   ngOnInit() {
   }
@@ -128,6 +130,13 @@ export class MenuPage implements OnInit {
 
   deleteDatabase() {
     this.storageService.removeDatabase();
+  }
+
+  changeLanguage() {
+    if(this.translate.currentLang === 'en') {
+      this.translate.use('he');
+    } else { this.translate.use('en'); }
+    console.log(this.translate.currentLang);
   }
 
 @HostListener('document:backbutton')

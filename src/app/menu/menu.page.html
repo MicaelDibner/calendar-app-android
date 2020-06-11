@@ -1,13 +1,10 @@
 <div class="screen">
-    <button type="button" class="btn btn-primary" autofocus (keydown.enter)="selectADate()">Select a date</button>
-    <br>
-    <button type="button" class="btn btn-primary" (keydown.enter)="selectToday()">Select today</button>
-    <br>
-    <button type="button" class="btn btn-primary" (keydown.enter)="createEvent()">Create Event</button>
-    <br>
-    <button type="button" class="btn btn-warning" (keydown.enter)="makeNotification()">Create notification</button>
-    <br>
-    <button type="button" class="btn btn-primary" (keydown.enter)="deleteDatabase()">Delete database</button>
-    <button type="button" class="btn btn-info" (keydown.enter)="writeFile()">Write file</button>
-    <button type="button" class="btn btn-info" (keydown.enter)="readFile()">Read file</button>
+    <button type="button" class="btn btn-primary" autofocus (keydown.enter)="selectADate()">{{ 'SELECT_A_DATE' | translate}}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="selectToday()">{{ 'SELECT_TODAY' | translate }}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="createEvent()">{{ 'CREATE_EVENT' | translate }}</button>
+    <button type="button" class="btn btn-warning" (keydown.enter)="makeNotification()">{{ 'CREATE_NOTIFICATION' | translate }}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="deleteDatabase()">{{ 'DELETE_DATABASE' | translate }}</button>
+    <button type="button" class="btn btn-info" (keydown.enter)="writeFile()">{{ 'WRITE_FILE' | translate }}</button>
+    <button type="button" class="btn btn-info" (keydown.enter)="readFile()">{{ 'READ_FILE' | translate }}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="changeLanguage()">{{ 'CHANGE_LANGUAGE' | translate }}</button>
 </div>

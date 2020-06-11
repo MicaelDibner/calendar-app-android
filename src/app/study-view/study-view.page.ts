@@ -4,7 +4,24 @@ import { GeoLocation, JewishCalendar, Parsha, YerushalmiYomiCalculator, YomiCalc
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { Rambam1JSON } from '../core/model/Rambam1JSON';
+import { RambamCalculator } from '../core/RambamCalculator';
+import { RambamPerek1NameJSON } from '../core/model/RambamPerek1NameJSON';
+import { RambamPerek3NameJSON } from '../core/model/RambamPerek3NameJSON';
+import { TanahCalculator } from '../core/TanahCalculator';
+import { MishnaCalculator } from '../core/MishnaCalculator';
+import { TanahNameJSON } from '../core/model/TanahNameJSON';
+import { MishnaNameJSON } from '../core/model/MishnaNameJSON';
+import { PerekYomiNameJSON } from '../core/model/PerekYomiNameJSON';
+import { LikutyMoranNameJSON } from '../core/model/LikutyMoranNameJSON';
+import { LikutyHalhotNameJSON } from '../core/model/LikutyHalhotNameJSON';
+import { PerekYomiCalculator } from '../core/PerekYomiCalculator';
+import { LikutyMoranCalculator } from '../core/LikutyMoranCalculator';
+import { LikutyHalhotCalculator } from '../core/LikutyHalhotCalculator';
+import { DersoMosharCalculator } from '../core/DersoMosharCalculator';
+import { DersoMosharNameJSON } from '../core/model/DersoMosharNameJSON';
+import { DersoHalhotNameJSON } from '../core/model/DersoHalhotNameJSON';
+import { DersoHalhotCalculator } from '../core/DersoHalhotCalculator';
+
 
 /**
  * Page shows data about stydies for date, received from SelectedDateService
@@ -29,11 +46,28 @@ export class StudyViewPage implements OnInit {
   masechtajrs: string;
   masechtapagejrs: string;
   masechtanumberjrs: string;
-  rambam: string;
+  rambam1Daf: number;
+  rambam3Daf: number;
+  RambamPerek1NameJSON = RambamPerek1NameJSON;
+  RambamPerek3NameJSON = RambamPerek3NameJSON;
+  MishnaNameJSON = MishnaNameJSON;
+  TanahNameJSON = TanahNameJSON;
+  PerekYomiNameJSON = PerekYomiNameJSON;
+  LikutyMoranNameJSON = LikutyMoranNameJSON;
+  LikutyHalhotNameJSON = LikutyHalhotNameJSON;
+  DersoMosharNameJSON = DersoMosharNameJSON;
+  DersoHalhotNameJSON = DersoHalhotNameJSON;
   chalakim: any;
   chalakimTohu: any;
   hebrewModel: NgbDateStruct;
   time: string;
+  tanah: number;
+  mishna: number;
+  perekYomi: number;
+  LikutyMoran: number;
+  likutyHalhot: number;
+  dersoMoshar: number;
+  dersoHalhot: number;
 
   constructor(private router: Router, private selectedDateServise: SelectedDateService) { }
 
@@ -69,11 +103,11 @@ export class StudyViewPage implements OnInit {
       this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
       this.model = this.dates.georgianDate;
       this.hebrewModel = this.dates.hebrewDate;
-      this.jewishCalendar.setGregorianDate(this.model.year, this.model.month , this.model.day);
+      this.jewishCalendar.setGregorianDate(this.model.year, this.model.month - 1 , this.model.day);
     // this.jewishCalendar.setJewishDate(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
       console.log(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
       this.time = '' + this.jewishCalendar.getGregorianYear() + 
-      this.jewishCalendar.getGregorianMonth() + this.jewishCalendar.getGregorianDayOfMonth();
+      (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
       console.log('data setted: ' + this.time);
       this.getDataDay();
   }
@@ -92,21 +126,28 @@ export class StudyViewPage implements OnInit {
     this.dafYomiBavli = YomiCalculator.getDafYomiBavli(this.jewishCalendar);
     this.masechta = this.dafYomiBavli.getMasechta() + ' ' + this.dafYomiBavli.getMasechtaTransliterated();
     this.masechtapage = ('Daf: ' + this.dafYomiBavli.getDaf());
-    this.masechtanumber = ('Masechta number: ' + this.dafYomiBavli.getMasechtaNumber());
+    this.masechtanumber = ('Masechta number: ' + (this.dafYomiBavli.getMasechtaNumber() + 1));
     this.masechtajrs = this.dafYomiYerushalmi.getYerushalmiMasechta() + ' ' + this.dafYomiYerushalmi.getYerushlmiMasechtaTransliterated();
     this.masechtapagejrs = ('Daf: ' + this.dafYomiYerushalmi.getDaf());
     this.masechtanumberjrs = ('Masechta number: ' + this.dafYomiYerushalmi.getMasechtaNumber());
     const dateRambam = +('' + this.model.year + this.model.month + this.getDay(this.model.day));
-    this.rambam = Rambam1JSON[dateRambam];
-    console.warn(this.jewishCalendar.getDate());
+    this.rambam1Daf = RambamCalculator.getRambam1Perek(this.jewishCalendar);
+    this.rambam3Daf = RambamCalculator.getRambam3Perek(this.jewishCalendar);
+    this.tanah = TanahCalculator.getTanahChapter(this.jewishCalendar);
+    this.mishna = MishnaCalculator.getMishnaChapter(this.jewishCalendar);
+    this.perekYomi = PerekYomiCalculator.getPerekYomiChapter(this.jewishCalendar);
+    this.LikutyMoran = LikutyMoranCalculator.getLikutyMoranChapter(this.jewishCalendar);
+    this.likutyHalhot = LikutyHalhotCalculator.getLikutyHalhotChapter(this.jewishCalendar);
+    this.dersoMoshar = DersoMosharCalculator.getDersoMocharChapter(this.jewishCalendar);
+    this.dersoHalhot = DersoHalhotCalculator.getTanahChapter(this.jewishCalendar);
   }
   @HostListener('document:menubutton')
   onMenu() {
-    this.router.navigate(['hebrewdatepicker']);
+    this.router.navigate(['rabbi-view']);
   }
   @HostListener('document:keydown.q')
   onQ() {
-    this.router.navigate(['hebrewdatepicker']);
+    this.router.navigate(['rabbi-view']);
   }
   @HostListener('document:backbutton')
   onBack() {

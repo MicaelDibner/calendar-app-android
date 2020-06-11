@@ -33,6 +33,10 @@ const routes: Routes = [
     path: 'study-view',
     loadChildren: () => import('./study-view/study-view.module').then( m => m.StudyViewPageModule)
   },
+  {
+    path: 'rabbi-view',
+    loadChildren: () => import('./rabbi-view/rabbi-view.module').then( m => m.RabbiViewPageModule)
+  },
 ];
 
 @NgModule({

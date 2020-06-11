@@ -1,0 +1,10 @@
+<ion-content>
+    <div class="date-top">
+        <div class="georgianDate">{{this.getHebrewDate()}}</div>
+    </div>
+    <div class="screen">
+        <div class="hebrewText"*ngFor="let string of strings">
+            {{string}} <hr>
+        </div>
+    </div>
+</ion-content>

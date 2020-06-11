@@ -43,7 +43,7 @@ export class CreateEventComponent implements OnInit {
  * Creating new notification for Event 1 hour before for all new events
  */
     const basicNotification = {
-      unitsType: 'Hours before',
+      unitsType: 'HOURS_BEFORE',
       unitsBefore: 1
     } as INewNotification;
     this.notifications.push(basicNotification);
@@ -114,16 +114,16 @@ export class CreateEventComponent implements OnInit {
     this.notifications.forEach(value => {
       const notificationDate = new Date(settedDate);
       switch (value.unitsType) {
-        case 'Minutes before':
+        case 'MINUTES_BEFORE':
           notificationDate.setMinutes(settedDate.getMinutes() - value.unitsBefore);
           break;
-        case 'Hours before':
+        case 'HOURS_BEFORE':
           notificationDate.setHours(settedDate.getHours() - value.unitsBefore);
           break;
-        case 'Days before':
+        case 'DAYS_BEFORE':
           notificationDate.setDate(settedDate.getDate() - value.unitsBefore);
           break;
-        case 'Months before':
+        case 'MONTS_BEFORE':
           notificationDate.setMonth(settedDate.getMonth() - value.unitsBefore);
           break;
         default:

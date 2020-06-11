@@ -1,23 +1,40 @@
 <ion-content [scrollY]="true">
+    <div class="screen">
 <h6>{{this.time}}</h6> 
-<h6>Molad Chalakim</h6> 
+<h6>{{ 'MOLAD_CHALAKIM' | translate }}</h6> 
 {{'Molad chalakim: ' + this.chalakim}} <br>
 {{'Molad chalakim tohu: ' + this.chalakimTohu}} 
 <hr>
-<h6>Parasha</h6> 
+<h6>{{ 'PARASHA' | translate }}</h6> 
 {{this.parsha}} <br>
 {{this.specialParsha}} 
 <hr>
-<h6>Talmud Bavli</h6>
+<h6>{{ 'TALMUD_BAVLI' | translate }}</h6>
 {{this.masechta}} <br>
 {{this.masechtapage}} <br>
 {{this.masechtanumber}} <br>
 <hr>
-<h6>Talmud Yerushalmi</h6> 
+<h6>{{ 'TALMUD_YERUSHALMI' | translate }}</h6> 
 {{this.masechtajrs}} <br>
 {{this.masechtapagejrs}} <br>
 {{this.masechtanumberjrs}}
 <hr>
-<h6>Rambam</h6>
-{{this.rambam}} <br>
+<h6>{{ 'RAMBAM' | translate }}</h6>
+{{RambamPerek1NameJSON[this.rambam1Daf]}} <hr>
+{{RambamPerek3NameJSON[this.rambam3Daf]}} <hr>
+<h6>{{ 'TANAH' | translate }}</h6>
+{{TanahNameJSON[this.tanah]}} <hr>
+<h6>{{ 'MISHNA' | translate }}</h6>
+{{MishnaNameJSON[this.mishna]}} <hr>
+<h6>{{ 'PEREKYOMI' | translate }}</h6>
+{{PerekYomiNameJSON[this.perekYomi]}} <hr>
+<h6>{{ 'LIKUTYMORAN' | translate }}</h6>
+{{LikutyMoranNameJSON[this.LikutyMoran]}} <hr>
+<h6>{{ 'LIKUTYHALHOT' | translate }}</h6>
+{{LikutyHalhotNameJSON[this.likutyHalhot]}} <hr>
+<h6>{{ 'DERSOMOSHAR' | translate }}</h6>
+{{DersoMosharNameJSON[this.dersoMoshar]}} <br>
+<h6>{{ 'DERSOHALHOT' | translate }}</h6>
+{{DersoHalhotNameJSON[this.dersoHalhot]}} <br>
+</div>
 </ion-content>

@@ -1,7 +1,8 @@
-import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { FormGroup, Validators, FormControl, ValidatorFn, AbstractControl } from '@angular/forms';
 import { INewNotification } from 'src/app/core/model/INewNotification';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Page for Creating new Event; type IEvent
@@ -17,6 +18,7 @@ export class CreateNotificationComponent implements OnInit {
  * Event emiter for emitting INewNotification to CreateEventComponent
  */
   @Output() emitNotification = new EventEmitter<INewNotification>();
+  @ViewChild('select') selectView: ElementRef;
 
   notificationForm = new FormGroup({
     unitsBefore: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), this.maxValueValidator()]),
@@ -37,7 +39,8 @@ export class CreateNotificationComponent implements OnInit {
 
   constructor(public navCtrl: NavController) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
 /**
  * Emit INewNotification to CreateEventComponent

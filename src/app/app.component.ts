@@ -4,6 +4,7 @@ import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StorageService } from './core/services/storage.service';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     @Inject('Window') window: Window,
     private storageService: StorageService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {
     this.initializeApp();
     console.log(window.innerHeight + ' ' + window.outerHeight + ' ' + window.innerWidth
@@ -25,7 +27,7 @@ export class AppComponent {
 
 
 /**
- * 1) Receive stste of platform from Ionic
+ * 1) Receive state of platform from Ionic
  * 2) Download events from storageService
  * 3) Hide splashscreen
  */
@@ -37,6 +39,8 @@ export class AppComponent {
       this.splashScreen.hide();
       this.router.navigate(['hebrewdatepicker']);
     }); });
+    this.translate.setDefaultLang('en');
+    this.translate.use('he');
   }
 /**
  * 1) Start listen menu button

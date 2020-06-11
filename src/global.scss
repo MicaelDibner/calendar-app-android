@@ -39,11 +39,11 @@ body,
   height: 100%;
   }
   ngb-dp-header {
-    padding-top: 1% !important;
-    height: 5%;
+    height: 0%;
+    padding-top: 0px !important;
   }
   .ngb-dp-months{
-    height: 73%;
+    height: 100% !important;
   }
   ngb-datepicker-month{
     height: 18.2%;
@@ -84,9 +84,21 @@ body,
 .info {
   font-size: larger;
   text-align: center;
-  height: 20%;
+  height: 10%;
+  position: absolute; 
+  bottom: 5%;
+  right: 0;
+  left: 0;
+}
+.dateInfo{
+  background-color: #f8f9fa;
+}
+.date-top {
+  font-size: larger;
+  text-align: center;
   position: relative; 
   top: 0px;
+  background-color: #f8f9fa;
 }
 
 .btn{
@@ -114,9 +126,8 @@ body,
   padding-right: 0px !important;
 }
 .ngb-dp-week.ngb-dp-weekdays{
-  height: auto !important;
+  height: 2rem !important;
 }
 .ngb-dp-week-number.ngb-dp-weekday {
   line-height: initial !important;
 }
-

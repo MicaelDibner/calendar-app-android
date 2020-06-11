@@ -1,6 +1,14 @@
+<div class="date-top">
+  <div class="georgianDate">{{this.getHebrewDate()}}</div>
+</div>
 <div id="calendar">
-  <ngb-datepicker class="hebrew rtl" navigation='arrows' [showWeekdays]="true" #dp [(ngModel)]="model" [displayMonths]="1" [firstDayOfWeek]="7" [dayTemplate]="dt"
-                [dayTemplateData]="dayTemplateData" [footerTemplate]="footerTemplate">
+  <ngb-datepicker class="hebrew rtl" navigation='none' [showWeekdays]="true" #dp [(ngModel)]="model" [displayMonths]="1" [firstDayOfWeek]="7" [dayTemplate]="dt"
+                [dayTemplateData]="dayTemplateData">
+                <ng-template ngbDatepickerContent>
+                  <div *ngFor="let month of dp.state.months">
+                    <ngb-datepicker-month [month]="month"></ngb-datepicker-month>
+                  </div>
+                </ng-template>
 </ngb-datepicker>
 
 <ng-template #dt let-date let-today="today" let-data="data" let-selected="selected" let-currentMonth="currentMonth">
@@ -21,11 +29,9 @@
     </div>
     </div>
 </ng-template>
+</div>
 
-<ng-template #footerTemplate>
-  <div class="info">
-    <marquee behavior="scroll" direction="left">{{this.getHebrewDate()}}</marquee>
-    <div class="georgianDate">{{this.getGeorgianDate()}}</div>
-  </div>
-</ng-template>
+<div class="info">
+    <marquee behavior="scroll" direction="left">{{this.getEventsData()}}</marquee>
+    <div class="dateInfo">{{this.getGeorgianDate()}}</div>
 </div>

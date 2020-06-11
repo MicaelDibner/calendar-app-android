@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { StudyViewPageRoutingModule } from './study-view-routing.module';
 
 import { StudyViewPage } from './study-view.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    StudyViewPageRoutingModule
+    StudyViewPageRoutingModule,
+    TranslateModule.forChild()
   ],
   declarations: [StudyViewPage]
 })

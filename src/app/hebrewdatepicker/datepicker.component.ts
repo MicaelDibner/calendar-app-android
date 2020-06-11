@@ -17,6 +17,7 @@ import { Parsha } from 'kosher-zmanim';
 import { DatePipe, Location } from '@angular/common';
 import { NavController } from '@ionic/angular';
 import { IDayInfoModel } from '../core/model/IDayInfoModel';
+import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
 
 const hagim = {
   0: 'EREV_PESACH',
@@ -76,8 +77,10 @@ export class DatepickerComponent implements OnInit {
   dates: IDates;
   jewishCalendar = new JewishCalendar();
   // handlers for Renderer2
-  private button1Handler;
-  private button3Handler;
+  private button4Handler;
+  private button6Handler;
+  private button2Handler;
+  private button0Handler;
   private buttonEnterHandler;
 
 
@@ -128,8 +131,10 @@ export class DatepickerComponent implements OnInit {
     this.datepicker.focusSelect();
     this.datepicker.focus();
     // start listen the handlers
-    this.button1Handler = this.renderer.listen('document', 'keydown.1', event => this.onStar());
-    this.button3Handler = this.renderer.listen('document', 'keydown.3', event => this.onGrid());
+    this.button4Handler = this.renderer.listen('document', 'keydown.4', event => this.onLeft());
+    this.button6Handler = this.renderer.listen('document', 'keydown.6', event => this.onRight());
+    this.button2Handler = this.renderer.listen('document', 'keydown.2', event => this.onUp());
+    this.button0Handler = this.renderer.listen('document', 'keydown.0', event => this.onDown());
     this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', event => this.onEnter());
   }
 
@@ -139,21 +144,37 @@ export class DatepickerComponent implements OnInit {
 
   ionViewWillLeave(): void{
     this.emitDate(this.model);
-    this.button1Handler();
-    this.button3Handler();
+    this.button4Handler();
+    this.button6Handler();
+    this.button2Handler();
+    this.button0Handler();
     this.buttonEnterHandler();
   }
 
 // button 3 handler
 
-  onGrid() {
-    this.datepicker.onNavigateEvent(1);
+  onLeft() {
+    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'm', -1));
   }
 
 // button 1 handler
 
-  onStar() {
-    this.datepicker.onNavigateEvent(0);
+  onRight() {
+    const {state, calendar} = this.datepicker;
+    this.datepicker.navigateTo(calendar.getNext(state.focusedDate, 'm', 1));
+  }
+
+// button 2 handler
+
+  onUp() {
+    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'y', -1));
+  }
+
+// button 0 handler
+
+  onDown() {
+    const {state, calendar} = this.datepicker;
+    this.datepicker.navigateTo(calendar.getNext(state.focusedDate, 'y', 1));
   }
 
 // button Enter handler (In CustomKeybordServise no default eventPropagination())
@@ -266,7 +287,7 @@ export class DatepickerComponent implements OnInit {
 /**
  * Method return custom string for day in the <marquee> tag
  */
-  getHebrewDate(): string {
+  getEventsData(): string {
     let holyday = '';
     let events = '';
     let parasha = '';
@@ -312,10 +333,18 @@ export class DatepickerComponent implements OnInit {
   }
 
 /**
+ * Method convert date to string format
+ */
+
+  getHebrewDate(): string {
+    return this.i18n.getDayNumerals(this.model) + ' ' + this.i18n.getMonthShortName(this.model.month)
+    + ' ' + this.i18n.getYearNumerals(this.model.year);
+  }
+/**
  * Method convert date from hebrew format to gregorian format
  */
 
- // TODO: ake data from dayTemplate
+ // TODO: take data from dayTemplate
 
   getGeorgianDate(): string {
     const modelNgbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
@@ -355,5 +384,15 @@ export class DatepickerComponent implements OnInit {
       hebrewDate: model
     };
     this.selectedDateServise.selectedDateSubscribtion.next(this.dates);
+  }
+
+  navigate(number: number) {
+    const {state, calendar} = this.datepicker;
+    this.datepicker.navigateTo(calendar.getNext(state.firstDate, 'm', number));
+  }
+
+  today() {
+    const {calendar} = this.datepicker;
+    this.datepicker.navigateTo(calendar.getToday());
   }
 }
