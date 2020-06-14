@@ -4,3 +4,9 @@
     overflow-wrap: break-word;
     word-wrap: break-word;
   }
+
+.hebrewText{
+    word-break: normal;
+    direction: rtl;
+    text-align: right;
+}

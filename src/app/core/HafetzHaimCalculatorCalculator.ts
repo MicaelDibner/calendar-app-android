@@ -4,22 +4,22 @@ import { Calendar, JewishCalendar } from 'kosher-zmanim';
 
 /**
  * This class calculates the Daf Yomi Bavli page (daf) for a given date. To calculate Daf Yomi Yerushalmi
- * use the {@link YerushalmiDersoHalhotCalculator}. The library may cover Mishna Yomi etc. at some point in the future.
+ * use the {@link YerushalmiHafetzHaimCalculator}. The library may cover Mishna Yomi etc. at some point in the future.
  *
  * @author &copy; Bob Newell (original C code)
  * @author &copy; Eliyahu Hershfeld 2011 - 2019
  * @version 0.0.1
  */
-export class DersoHalhotCalculator {
-  private static readonly dersoHalhotStartDate: DateTime = DateTime.fromObject({
-    year: 2016,
-    month: Calendar.APRIL + 1,
-    day: 8,
+export class HafetzHaimCalculator {
+  private static readonly hafetzHaimCalculator: DateTime = DateTime.fromObject({
+    year: 1971,
+    month: Calendar.SEPTEMBER + 1,
+    day: 20,
   });
 
-  private static readonly dersoHalhotJulianStartDay: number = DersoHalhotCalculator.getJulianDay(DersoHalhotCalculator.dersoHalhotStartDate);
+  private static readonly dersoHalhotJulianStartDay: number = HafetzHaimCalculator.getJulianDay(HafetzHaimCalculator.hafetzHaimCalculator);
   private static readonly shekalimChangeDate: DateTime = DateTime.fromObject({ year: 1975, month: Calendar.JUNE + 1, day: 24 });
-  private static readonly shekalimJulianChangeDay: number = DersoHalhotCalculator.getJulianDay(DersoHalhotCalculator.shekalimChangeDate);
+  private static readonly shekalimJulianChangeDay: number = HafetzHaimCalculator.getJulianDay(HafetzHaimCalculator.shekalimChangeDate);
 
   /**
    * Returns the <a href="http://en.wikipedia.org/wiki/Daf_yomi">Daf Yomi</a> <a
@@ -44,17 +44,42 @@ export class DersoHalhotCalculator {
    * @throws IllegalArgumentException
    *             if the date is prior to the September 11, 1923 start date of the first Daf Yomi cycle
    */
-  public static getDersoHalhotChapter(calendar: JewishCalendar): number {
+  public static getHafetzHaimChapter(calendar: JewishCalendar): number {
     /*
      * The number of daf per masechta. Since the number of blatt in Shekalim changed on the 8th Daf Yomi cycle
      * beginning on June 24, 1975 from 13 to 22, the actual calculation for blattPerMasechta[4] will later be
      * adjusted based on the cycle.
      */
 
-    const date: DateTime = calendar.getDate();
-    const julianDay: number = this.getJulianDay(date);
-    let cycleNo: number = 0;
-    cycleNo = 1 + ((julianDay - DersoHalhotCalculator.dersoHalhotJulianStartDay) % 2144);
+
+
+    // const julianDay: number = this.getJulianDay(date);
+    // console.log((julianDay - HafetzHaimCalculator.dersoHalhotJulianStartDay) % 355);
+
+    console.log('' + calendar.getJewishYear() + calendar.getJewishMonth() + calendar.getJewishDayOfMonth());
+
+    let cycleNo = 0;
+    console.log('All days in month: ' + calendar.getDaysInJewishMonth() + 'day now: ' 
+    + calendar.getJewishDayOfMonth());
+    const month = calendar.getJewishMonth();
+    console.log(calendar.getDaysSinceStartOfJewishYear());
+    console.log('Hodesh ' + month);
+
+
+    if (month === 8 && calendar.getDaysInJewishMonth() === 29 && calendar.getJewishDayOfMonth() === 29 ) {
+        console.warn('special month!');
+        cycleNo = 5960; }
+    else if ( month === 9 && calendar.getDaysInJewishMonth() === 29 && calendar.getJewishDayOfMonth() === 29) {
+      console.warn('special month!');
+      cycleNo = 8990; }
+     else {
+      cycleNo = calendar.getDaysSinceStartOfJewishYear();
+    }
+    if(calendar.isJewishLeapYear()) {
+      console.log('jewish loop year');
+    }
+    // let cycleNo: number = 0;
+    // cycleNo = 1 + ((julianDay - HafetzHaimCalculator.dersoHalhotJulianStartDay) / 356);
 
     // /* Fix Shekalim for old cycles. */
     // if (cycleNo <= 7) {
@@ -81,6 +106,8 @@ export class DersoHalhotCalculator {
     //     break;
     //   }
     // }
+
+    console.warn(cycleNo);
 
     return cycleNo;
   }

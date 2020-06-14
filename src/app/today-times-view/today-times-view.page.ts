@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Page calculates difference between times of prays and real time
@@ -44,7 +45,7 @@ export class TodayTimesViewPage implements OnInit {
   shaahZmanis16Point1Degrees: string;
   shaahZmanisGra: string;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router,  public translate: TranslateService) { }
 
 /**
  * Start calculation into JS native setInterval method

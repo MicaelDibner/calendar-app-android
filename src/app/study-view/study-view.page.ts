@@ -21,6 +21,12 @@ import { DersoMosharCalculator } from '../core/DersoMosharCalculator';
 import { DersoMosharNameJSON } from '../core/model/DersoMosharNameJSON';
 import { DersoHalhotNameJSON } from '../core/model/DersoHalhotNameJSON';
 import { DersoHalhotCalculator } from '../core/DersoHalhotCalculator';
+import { TranslateService } from '@ngx-translate/core';
+import { HafetzHaimCalculator } from '../core/HafetzHaimCalculatorCalculator';
+import { HafetzHaimRegularNameJSON } from '../core/model/HafetzHaimRegularNameJSON';
+import { HafetzHaimLongNameJSON } from '../core/model/HafetzHaimLongNameJSON';
+
+import { DateTime } from 'luxon';
 
 
 /**
@@ -57,6 +63,8 @@ export class StudyViewPage implements OnInit {
   LikutyHalhotNameJSON = LikutyHalhotNameJSON;
   DersoMosharNameJSON = DersoMosharNameJSON;
   DersoHalhotNameJSON = DersoHalhotNameJSON;
+  HafetzHaimRegularNameJSON = HafetzHaimRegularNameJSON;
+  HafetzHaimLongNameJSON = HafetzHaimLongNameJSON;
   chalakim: any;
   chalakimTohu: any;
   hebrewModel: NgbDateStruct;
@@ -68,8 +76,12 @@ export class StudyViewPage implements OnInit {
   likutyHalhot: number;
   dersoMoshar: number;
   dersoHalhot: number;
+  hafetzHaim: number;
 
-  constructor(private router: Router, private selectedDateServise: SelectedDateService) { }
+  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService,
+    ) { 
+      console.log('' + this.jewishCalendar.getJewishYear() + this.jewishCalendar.getJewishMonth() + this.jewishCalendar.getJewishDayOfMonth());
+    }
 
 /**
  * Setting geolocation
@@ -103,8 +115,13 @@ export class StudyViewPage implements OnInit {
       this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
       this.model = this.dates.georgianDate;
       this.hebrewModel = this.dates.hebrewDate;
-      this.jewishCalendar.setGregorianDate(this.model.year, this.model.month - 1 , this.model.day);
-    // this.jewishCalendar.setJewishDate(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
+      let dateForCalendar: DateTime = DateTime.fromObject({
+        year: this.model.year,
+        month: this.model.month,
+        day: this.model.day,
+      });
+      this.jewishCalendar.setDate(dateForCalendar);
+      // this.jewishCalendar.setJewishMonth(this.hebrewModel.month);
       console.log(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
       this.time = '' + this.jewishCalendar.getGregorianYear() + 
       (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
@@ -130,7 +147,6 @@ export class StudyViewPage implements OnInit {
     this.masechtajrs = this.dafYomiYerushalmi.getYerushalmiMasechta() + ' ' + this.dafYomiYerushalmi.getYerushlmiMasechtaTransliterated();
     this.masechtapagejrs = ('Daf: ' + this.dafYomiYerushalmi.getDaf());
     this.masechtanumberjrs = ('Masechta number: ' + this.dafYomiYerushalmi.getMasechtaNumber());
-    const dateRambam = +('' + this.model.year + this.model.month + this.getDay(this.model.day));
     this.rambam1Daf = RambamCalculator.getRambam1Perek(this.jewishCalendar);
     this.rambam3Daf = RambamCalculator.getRambam3Perek(this.jewishCalendar);
     this.tanah = TanahCalculator.getTanahChapter(this.jewishCalendar);
@@ -139,7 +155,8 @@ export class StudyViewPage implements OnInit {
     this.LikutyMoran = LikutyMoranCalculator.getLikutyMoranChapter(this.jewishCalendar);
     this.likutyHalhot = LikutyHalhotCalculator.getLikutyHalhotChapter(this.jewishCalendar);
     this.dersoMoshar = DersoMosharCalculator.getDersoMocharChapter(this.jewishCalendar);
-    this.dersoHalhot = DersoHalhotCalculator.getTanahChapter(this.jewishCalendar);
+    this.dersoHalhot = DersoHalhotCalculator.getDersoHalhotChapter(this.jewishCalendar);
+    this.hafetzHaim = HafetzHaimCalculator.getHafetzHaimChapter(this.jewishCalendar);
   }
   @HostListener('document:menubutton')
   onMenu() {

@@ -1,18 +1,18 @@
 <ion-content [scrollY]="true">
-  <div class="screen">
+  <div class="screen" [class.hebrewText]="this.translate.currentLang === 'he'">
   <div class="card border-primary mb-3">
     <div class="card-header">
-      AlosHashachar {{this.getGeorgianDate()}}
+      {{ 'ALOSHASHACHAR' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
     <strong>19.8°</strong> {{this.complexZmanimCalendar.getAlos19Point8Degrees() | date:'HH:mm:ss'}}
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getAlos16Point1Degrees() | date:'HH:mm:ss'}}
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getAlos72() | date:'HH:mm:ss'}}
+    <strong> {{ '72_MINUTES' | translate }} </strong> {{this.complexZmanimCalendar.getAlos72() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Misheyakir {{this.getGeorgianDate()}}
+      {{ 'MISHEYAKIR' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
     <strong>11.5°</strong> {{this.complexZmanimCalendar.getMisheyakir11Point5Degrees() | date:'HH:mm:ss'}}
@@ -22,70 +22,70 @@
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Sunrise {{this.getGeorgianDate()}}
+      {{ 'SUNRISE' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getSunrise() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getSunrise() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Sof Zman Shma {{this.getGeorgianDate()}}
+      {{ 'SOF_ZMAN_SHMA' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getSofZmanShmaAlos16Point1ToSunset() | date:'HH:mm:ss'}}
-    <strong>MGA 72 Minutes</strong> {{this.complexZmanimCalendar.getSofZmanShmaMGA72Minutes() | date:'HH:mm:ss'}}
-    <strong>GRA</strong> {{this.complexZmanimCalendar.getSofZmanShmaGRA() | date:'HH:mm:ss'}}
+    <strong>MGA {{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getSofZmanShmaMGA72Minutes() | date:'HH:mm:ss'}}
+    <strong>{{ 'GRA' | translate }}</strong> {{this.complexZmanimCalendar.getSofZmanShmaGRA() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Chatzos {{this.getGeorgianDate()}}
+      {{ 'CHATZOS' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getChatzos() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getChatzos() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Mincha Gedola {{this.getGeorgianDate()}}
+      {{ 'MINCHA_GEDOLA' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getMinchaGedola() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getMinchaGedola() | date:'HH:mm:ss'}}
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getMinchaGedola16Point1Degrees()| date:'HH:mm:ss'}}
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getMinchaGedola72Minutes() | date:'HH:mm:ss'}}
+    <strong>{{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getMinchaGedola72Minutes() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Mincha Ketana {{this.getGeorgianDate()}}
+      {{ 'MINCHA_KETANA' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getMinchaKetana() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getMinchaKetana() | date:'HH:mm:ss'}}
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getMinchaKetana16Point1Degrees()| date:'HH:mm:ss'}}
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getMinchaKetana72Minutes() | date:'HH:mm:ss'}}
+    <strong>{{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getMinchaKetana72Minutes() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Plag Hamincha {{this.getGeorgianDate()}}
+      {{ 'PLAG_HAMINCHA' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getPlagHamincha() | date:'HH:mm:ss'}}
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getPlagHamincha72Minutes() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getPlagHamincha() | date:'HH:mm:ss'}}
+    <strong>{{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getPlagHamincha72Minutes() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Sunset (Shkiyat Ha-Hama) {{this.getGeorgianDate()}}
+      {{ 'SUNSET' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>Sea Level</strong> {{this.complexZmanimCalendar.getSunset() | date:'HH:mm:ss'}}
+    <strong>{{ 'SEA_LEVEL' | translate }}</strong> {{this.complexZmanimCalendar.getSunset() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Tzais Geonim {{this.getGeorgianDate()}}
+      {{ 'TZAIS_GEONIM' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
     <strong>6.45°</strong> {{this.complexZmanimCalendar.getTzaisGeonim6Point45Degrees() | date:'HH:mm:ss'}}
@@ -94,21 +94,21 @@
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Tzais {{this.getGeorgianDate()}}
+      {{ 'TZAIS' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getTzais16Point1Degrees() | date:'HH:mm:ss'}}
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getTzais72() | date:'HH:mm:ss'}}
+    <strong>{{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getTzais72() | date:'HH:mm:ss'}}
   </div>
   </div>
   <div class="card border-primary mb-3">
     <div class="card-header">
-      Shaah Zmanis {{this.getGeorgianDate()}}
+      {{ 'SHAAH_ZMANIS' | translate }} {{this.getGeorgianDate()}}
     </div>
   <div class="card-body text-primary">
-    <strong>72 Minutes</strong> {{this.complexZmanimCalendar.getShaahZmanis72Minutes() | date:'HH:mm:ss'}}
+    <strong>{{ '72_MINUTES' | translate }}</strong> {{this.complexZmanimCalendar.getShaahZmanis72Minutes() | date:'HH:mm:ss'}}
     <strong>16.1°</strong> {{this.complexZmanimCalendar.getShaahZmanis16Point1Degrees() | date:'HH:mm:ss'}}
-    <strong>GRA</strong> {{this.complexZmanimCalendar.getShaahZmanisGra() | date:'HH:mm:ss'}}
+    <strong>{{ 'GRA' | translate }}</strong> {{this.complexZmanimCalendar.getShaahZmanisGra() | date:'HH:mm:ss'}}
   </div>
   </div>
 </div>

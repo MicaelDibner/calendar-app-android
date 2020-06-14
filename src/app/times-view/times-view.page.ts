@@ -5,6 +5,7 @@ import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Page calculates times of prays for date, received from SelectedDateService
@@ -16,7 +17,7 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./times-view.page.scss'],
 })
 export class TimesViewPage implements OnInit {
-  constructor(private router: Router, private selectedDateServise: SelectedDateService) { }
+  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService) { }
   dates: IDates;
   model: NgbDateStruct;
   complexZmanimCalendar = new ComplexZmanimCalendar();

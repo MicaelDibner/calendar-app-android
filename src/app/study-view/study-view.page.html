@@ -1,5 +1,5 @@
 <ion-content [scrollY]="true">
-    <div class="screen">
+    <div class="screen" [class.hebrewText]="this.translate.currentLang === 'he'">
 <h6>{{this.time}}</h6> 
 <h6>{{ 'MOLAD_CHALAKIM' | translate }}</h6> 
 {{'Molad chalakim: ' + this.chalakim}} <br>
@@ -36,5 +36,15 @@
 {{DersoMosharNameJSON[this.dersoMoshar]}} <br>
 <h6>{{ 'DERSOHALHOT' | translate }}</h6>
 {{DersoHalhotNameJSON[this.dersoHalhot]}} <br>
+<h6>HafetzHaim</h6>
+<div *ngIf="this.jewishCalendar.isJewishLeapYear()">
+    {{HafetzHaimLongNameJSON[this.hafetzHaim]}} <br>
+</div>
+<div *ngIf="!this.jewishCalendar.isJewishLeapYear()">
+    {{HafetzHaimRegularNameJSON[this.hafetzHaim]}} <br>
+</div>
+<!-- <ng-container #regularYear>
+    {{HafetzHaimRegularNameJSON[this.hafetzHaim]}}
+</ng-container> -->
 </div>
 </ion-content>

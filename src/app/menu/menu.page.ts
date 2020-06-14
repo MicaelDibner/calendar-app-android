@@ -133,7 +133,7 @@ export class MenuPage implements OnInit {
   }
 
   changeLanguage() {
-    if(this.translate.currentLang === 'en') {
+    if (this.translate.currentLang === 'en') {
       this.translate.use('he');
     } else { this.translate.use('en'); }
     console.log(this.translate.currentLang);
