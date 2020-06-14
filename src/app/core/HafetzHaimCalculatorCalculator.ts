@@ -62,20 +62,43 @@ export class HafetzHaimCalculator {
     console.log('All days in month: ' + calendar.getDaysInJewishMonth() + 'day now: ' 
     + calendar.getJewishDayOfMonth());
     const month = calendar.getJewishMonth();
+    console.log('real month: ' + (month-6));
     console.log(calendar.getDaysSinceStartOfJewishYear());
     console.log('Hodesh ' + month);
+    let addedDays = 0;
 
 
-    if (month === 8 && calendar.getDaysInJewishMonth() === 29 && calendar.getJewishDayOfMonth() === 29 ) {
+    if (!calendar.isCheshvanLong() && calendar.isKislevShort()){
+      console.log('2 short days!');
+      addedDays = 2;
+    } else if (!calendar.isCheshvanLong() || calendar.isKislevShort()) {
+      console.log('1 short days!');
+      addedDays = 1;
+    }
+    if (month < 9) {
+      cycleNo = calendar.getDaysSinceStartOfJewishYear();
+    }
+    else if (month === 8 && calendar.getDaysInJewishMonth() === 29 && calendar.getJewishDayOfMonth() === 29 ) {
         console.warn('special month!');
         cycleNo = 5960; }
+    else if (month === 9) {
+      console.log('is Kislev!');
+      if (!calendar.isCheshvanLong()) {
+        console.log('Cheshvam was short!');
+        cycleNo = calendar.getDaysSinceStartOfJewishYear() + 1;
+      } else {
+        cycleNo = calendar.getDaysSinceStartOfJewishYear();
+      }
+    }
     else if ( month === 9 && calendar.getDaysInJewishMonth() === 29 && calendar.getJewishDayOfMonth() === 29) {
       console.warn('special month!');
       cycleNo = 8990; }
-     else {
-      cycleNo = calendar.getDaysSinceStartOfJewishYear();
+    else {
+      cycleNo = calendar.getDaysSinceStartOfJewishYear() + addedDays;
     }
-    if(calendar.isJewishLeapYear()) {
+
+
+    if (calendar.isJewishLeapYear()) {
       console.log('jewish loop year');
     }
     // let cycleNo: number = 0;
