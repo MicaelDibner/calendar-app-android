@@ -9,6 +9,7 @@ import { NotificationsService } from '../core/services/notifications.service';
 import { INotification } from '../core/model/INotification';
 import { StorageService } from '../core/services/storage.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NavController } from '@ionic/angular';
 
 /**
  * Page provide menuModule with children routes
@@ -31,7 +32,7 @@ export class MenuPage implements OnInit {
   constructor(private router: Router, private ngZone: NgZone, public location: Location,
               private selectedDateServise: SelectedDateService, private hebrewCalendar: NgbCalendarHebrew,
               private datePicker: DatePicker, private notifications: NotificationsService,
-              private storageService: StorageService, public translate: TranslateService) {
+              private navCntrl: NavController) {
               }
 
   ngOnInit() {
@@ -108,47 +109,25 @@ export class MenuPage implements OnInit {
     this.location.back();
   }
 
-/**
- * Method calls method in StorageService for writing text file
- */
-
-  writeFile() {
-    this.storageService.setFileInStorage();
+  openSettings(){
+    this.navCntrl.navigateForward('menu/settings');
   }
 
-/**
- * Method calls method in StorageService for reading text file
- */
-
-  readFile() {
-    this.storageService.getFileFromStorage();
-  }
-
-/**
- * Method calls method in StorageService for clearing database
- */
-
-  deleteDatabase() {
-    this.storageService.removeDatabase();
-  }
-
-  changeLanguage() {
-    if (this.translate.currentLang === 'en') {
-      this.translate.use('he');
-    } else { this.translate.use('en'); }
-    console.log(this.translate.currentLang);
+  closeMenu(){
+    this.navCntrl.pop();
   }
 
 @HostListener('document:backbutton')
 onMenu() {
     console.log('back pressed');
-    this.location.back();
+    this.navCntrl.pop();
   }
 @HostListener('document:keydown.r')
 onQ() {
     console.log('back pressed');
-    this.location.back();
-  }
+    this.navCntrl.pop();
+    // this.location.back();
+}
   @HostListener('document:keydown.enter')
 onEnter() {
   console.log('menu enter pressed');

@@ -192,10 +192,6 @@ export class DayViewPage implements OnInit {
     this.fillNotifications();
   }
 
-/**
- * Emit new notification and new NOT user events
- */
-
   ionViewWillLeave(): void{
     this.emitNotificationsAndEvents();
   }

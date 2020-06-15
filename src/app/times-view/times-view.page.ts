@@ -6,6 +6,8 @@ import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { GeolocationService } from '../core/services/geolocation.service';
+import { IGeolocation } from '../core/model/IGeolocation';
 
 /**
  * Page calculates times of prays for date, received from SelectedDateService
@@ -17,7 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./times-view.page.scss'],
 })
 export class TimesViewPage implements OnInit {
-  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService) { }
+  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService,
+              private geolocationServise: GeolocationService) { }
   dates: IDates;
   model: NgbDateStruct;
   complexZmanimCalendar = new ComplexZmanimCalendar();
@@ -28,9 +31,6 @@ export class TimesViewPage implements OnInit {
 
   ngOnInit(): void {
     this.getDataString();
-    const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
-    779.46, 'Asia/Jerusalem');
-    this.complexZmanimCalendar.setGeoLocation(geoLocation);
   }
 
   ionViewWillEnter(): void{
@@ -48,6 +48,11 @@ export class TimesViewPage implements OnInit {
     date.setFullYear(this.model.year, this.model.month - 1, this.model.day);
     console.log(date);
     this.complexZmanimCalendar.setDate(date);
+
+    const geoLocation: IGeolocation = this.geolocationServise.selectedGeolocationSubscribtion.getValue();
+    const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
+    geoLocation.elevation, geoLocation.time_zone);
+    this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
   }
 
 /**

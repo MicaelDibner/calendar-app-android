@@ -3,8 +3,6 @@
     <button type="button" class="btn btn-primary" (keydown.enter)="selectToday()">{{ 'SELECT_TODAY' | translate }}</button>
     <button type="button" class="btn btn-primary" (keydown.enter)="createEvent()">{{ 'CREATE_EVENT' | translate }}</button>
     <button type="button" class="btn btn-warning" (keydown.enter)="makeNotification()">{{ 'CREATE_NOTIFICATION' | translate }}</button>
-    <button type="button" class="btn btn-primary" (keydown.enter)="deleteDatabase()">{{ 'DELETE_DATABASE' | translate }}</button>
-    <button type="button" class="btn btn-info" (keydown.enter)="writeFile()">{{ 'WRITE_FILE' | translate }}</button>
-    <button type="button" class="btn btn-info" (keydown.enter)="readFile()">{{ 'READ_FILE' | translate }}</button>
-    <button type="button" class="btn btn-primary" (keydown.enter)="changeLanguage()">{{ 'CHANGE_LANGUAGE' | translate }}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="openSettings()">{{ 'SETTINGS' | translate}}</button>
+    <button type="button" class="btn btn-primary" (keydown.enter)="closeMenu()">{{ 'CLOSE' | translate}}</button>
 </div>

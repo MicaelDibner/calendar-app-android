@@ -1,6 +1,6 @@
 <ion-content>
   <div class="screen">
-  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="eventForm">
   <h6>{{ 'CREATE_EVENT' | translate }}</h6>
   <div class="form-group">
     <input formControlName="date" readonly [value]="eventForm.get('date').value | date: 'yyyy-M-dd'" 

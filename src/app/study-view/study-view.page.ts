@@ -79,17 +79,13 @@ export class StudyViewPage implements OnInit {
   hafetzHaim: number;
 
   constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService,
-    ) { 
-      console.log('' + this.jewishCalendar.getJewishYear() + this.jewishCalendar.getJewishMonth() + this.jewishCalendar.getJewishDayOfMonth());
-    }
+    ) {}
 
 /**
  * Setting geolocation
  */
 
   ngOnInit(): void {
-    const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
-    779.46, 'Asia/Jerusalem');
   }
 /**
  * Setting emitted date from SelectedDateService

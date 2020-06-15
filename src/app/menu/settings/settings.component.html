@@ -1,0 +1,9 @@
+<div class="screen">
+  <button type="button" class="btn btn-primary" autofocus (keydown.enter)="changeLanguage()">{{ 'CHANGE_LANGUAGE' | translate }}</button>
+  <hr>
+  <button type="button" class="btn btn-primary" (keydown.enter)="changeGeolocation()">{{ 'CHANGE_GEOLOCATION' | translate }}</button>
+  <hr>
+  <button type="button" class="btn btn-primary" (keydown.enter)="deleteDatabase()">{{ 'DELETE_DATABASE' | translate }}</button>
+  <button type="button" class="btn btn-info" (keydown.enter)="writeFile()">{{ 'WRITE_FILE' | translate }}</button>
+  <button type="button" class="btn btn-info" (keydown.enter)="readFile()">{{ 'READ_FILE' | translate }}</button>
+</div>

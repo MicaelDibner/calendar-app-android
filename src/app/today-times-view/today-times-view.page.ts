@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
 import { TranslateService } from '@ngx-translate/core';
+import { IGeolocation } from '../core/model/IGeolocation';
+import { GeolocationService } from '../core/services/geolocation.service';
 
 /**
  * Page calculates difference between times of prays and real time
@@ -45,7 +47,7 @@ export class TodayTimesViewPage implements OnInit {
   shaahZmanis16Point1Degrees: string;
   shaahZmanisGra: string;
 
-  constructor(private router: Router,  public translate: TranslateService) { }
+  constructor(private router: Router,  public translate: TranslateService, private geolocationService: GeolocationService) { }
 
 /**
  * Start calculation into JS native setInterval method
@@ -54,10 +56,10 @@ export class TodayTimesViewPage implements OnInit {
   ngOnInit(): void {
     // setting date to ComplexZmanimCalendar instance
     this.complexZmanimCalendar.setDate(this.date);
-    const geoLocation: GeoLocation = new GeoLocation('Jerusalem' , 31.76832, 35.21371,
-    779.46, 'Asia/Jerusalem');
-    // setting geolocation to ComplexZmanimCalendar instance
-    this.complexZmanimCalendar.setGeoLocation(geoLocation);
+    const geoLocation: IGeolocation = this.geolocationService.selectedGeolocationSubscribtion.getValue();
+    const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
+    geoLocation.elevation, geoLocation.time_zone);
+    this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
     this.refresh = setInterval(() => {
       this.date = new Date();
       this.alos19Point8Degrees = this.timeConversion(this.complexZmanimCalendar.getAlos19Point8Degrees().ts - Date.now());
@@ -100,6 +102,10 @@ export class TodayTimesViewPage implements OnInit {
 
   ionViewWillEnter(): void{
     this.complexZmanimCalendar.setDate(this.date);
+    const geoLocation: IGeolocation = this.geolocationService.selectedGeolocationSubscribtion.getValue();
+    const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
+    geoLocation.elevation, geoLocation.time_zone);
+    this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
   }
 
 /**

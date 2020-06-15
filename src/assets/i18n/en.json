@@ -161,5 +161,7 @@
     "CLOSE" : "Close",
     "CANDLE_LIGHTING" : "Candle Lighting",
     "YATZIAT_SHABBAT" : "Yatziat_shabbat",
-    "ROSHODESH" : "Roshhodesh"
+    "ROSHODESH" : "Roshhodesh",
+    "SETTINGS" : "Settings",
+    "CHANGE_GEOLOCATION" : "Change Geolocation"
 }

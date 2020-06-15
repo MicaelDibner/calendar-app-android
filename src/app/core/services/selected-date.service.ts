@@ -4,7 +4,7 @@ import { IDates } from '../model/IDates';
 import { IDayInfoModel} from '../model/IDayInfoModel';
 
 /**
- * Service contains two observables in format BehaviorSubjec, that hame method getValue()
+ * Service contains two observables in format BehaviorSubjec, that have method getValue()
  * and return emitted value to component
  */
 

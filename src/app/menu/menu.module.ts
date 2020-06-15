@@ -14,6 +14,11 @@ import { CreateNotificationComponent } from './create-notification/create-notifi
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SettingsComponent } from './settings/settings.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { GeolocationComponent } from './geolocation/geolocation.component';
+import { SetGeolocationComponent } from './set-geolocation/set-geolocation.component';
+
 
 @NgModule({
   imports: [
@@ -23,9 +28,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     MenuPageRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    TranslateModule.forChild()
+    TranslateModule.forChild(),
   ],
-  declarations: [MenuPage, CreateEventComponent, CreateNotificationComponent],
+  declarations: [MenuPage, CreateEventComponent, CreateNotificationComponent, SettingsComponent, 
+    GeolocationComponent, SetGeolocationComponent],
   exports: [CreateNotificationComponent]
 })
 export class MenuPageModule {}
