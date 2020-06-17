@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeoLocation, JewishCalendar, Parsha, YerushalmiYomiCalculator, YomiCalculator, Daf} from 'kosher-zmanim';
 import { SelectedDateService } from '../core/services/selected-date.service';
@@ -27,6 +27,7 @@ import { HafetzHaimRegularNameJSON } from '../core/model/HafetzHaimRegularNameJS
 import { HafetzHaimLongNameJSON } from '../core/model/HafetzHaimLongNameJSON';
 
 import { DateTime } from 'luxon';
+import { NavController, IonContent } from '@ionic/angular';
 
 
 /**
@@ -39,6 +40,10 @@ import { DateTime } from 'luxon';
   styleUrls: ['./study-view.page.scss'],
 })
 export class StudyViewPage implements OnInit {
+  @ViewChild('content') content: IonContent;
+  @ViewChild('screen') contentDiv: ElementRef;
+  scroll = 0;
+
   jewishCalendar = new JewishCalendar();
   dates: IDates;
   model: NgbDateStruct;
@@ -78,8 +83,58 @@ export class StudyViewPage implements OnInit {
   dersoHalhot: number;
   hafetzHaim: number;
 
-  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService,
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+  private buttonUpHandler;
+  private buttonDownHandler;
+
+  constructor(private navCntrl: NavController, private renderer: Renderer2,
+              private selectedDateServise: SelectedDateService, public translate: TranslateService,
     ) {}
+
+
+    ionViewWillEnter(): void{
+      this.getDataString();
+      this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+      this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+      this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+      this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+      this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
+      this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
+    }
+
+
+    ionViewWillLeave(): void{
+      this.buttonBackHandler();
+      this.buttonMenuHandler();
+      this.buttonRHandler();
+      this.buttonQHandler();
+      this.buttonUpHandler();
+      this.buttonDownHandler();
+    }
+
+    onMenu() {
+      this.navCntrl.navigateForward('menu');
+    }
+
+    onBack() {
+      this.navCntrl.navigateForward('rabbi-view');
+    }
+
+    onUp(event: KeyboardEvent) {
+      event.preventDefault();
+      if (this.scroll >= 100) {this.scroll = this.scroll - 100; }
+      this.content.scrollToPoint(0, this.scroll);
+    }
+  
+    onDown(event: KeyboardEvent) {
+      event.preventDefault();
+      if (this.scroll <= this.contentDiv.nativeElement.scrollHeight - 395) {this.scroll = this.scroll + 100; }
+      this.content.scrollToPoint(0, this.scroll);
+      console.log(this.scroll);
+    }
 
 /**
  * Setting geolocation
@@ -90,10 +145,6 @@ export class StudyViewPage implements OnInit {
 /**
  * Setting emitted date from SelectedDateService
  */
-
-  ionViewWillEnter(): void{
-    this.getDataString();
-  }
 
 /**
  * Changing date format for Rambam1JSON class
@@ -119,7 +170,7 @@ export class StudyViewPage implements OnInit {
       this.jewishCalendar.setDate(dateForCalendar);
       // this.jewishCalendar.setJewishMonth(this.hebrewModel.month);
       console.log(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
-      this.time = '' + this.jewishCalendar.getGregorianYear() + 
+      this.time = '' + this.jewishCalendar.getGregorianYear() +
       (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
       console.log('data setted: ' + this.time);
       this.getDataDay();
@@ -154,21 +205,4 @@ export class StudyViewPage implements OnInit {
     this.dersoHalhot = DersoHalhotCalculator.getDersoHalhotChapter(this.jewishCalendar);
     this.hafetzHaim = HafetzHaimCalculator.getHafetzHaimChapter(this.jewishCalendar);
   }
-  @HostListener('document:menubutton')
-  onMenu() {
-    this.router.navigate(['rabbi-view']);
-  }
-  @HostListener('document:keydown.q')
-  onQ() {
-    this.router.navigate(['rabbi-view']);
-  }
-  @HostListener('document:backbutton')
-  onBack() {
-    this.router.navigate(['menu']);
-  }
-  @HostListener('document:keydown.r')
-  onR() {
-    this.router.navigate(['menu']);
-  }
-
 }

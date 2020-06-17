@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
@@ -8,6 +8,8 @@ import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { GeolocationService } from '../core/services/geolocation.service';
 import { IGeolocation } from '../core/model/IGeolocation';
+import { NavController, IonContent } from '@ionic/angular';
+import { element } from 'protractor';
 
 /**
  * Page calculates times of prays for date, received from SelectedDateService
@@ -19,11 +21,24 @@ import { IGeolocation } from '../core/model/IGeolocation';
   styleUrls: ['./times-view.page.scss'],
 })
 export class TimesViewPage implements OnInit {
-  constructor(private router: Router, private selectedDateServise: SelectedDateService, public translate: TranslateService,
-              private geolocationServise: GeolocationService) { }
+  @ViewChild('content') content: IonContent;
+  @ViewChild('screen') contentDiv: ElementRef;
+
   dates: IDates;
   model: NgbDateStruct;
   complexZmanimCalendar = new ComplexZmanimCalendar();
+  scroll = 0;
+
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+  private buttonUpHandler;
+  private buttonDownHandler;
+
+  constructor(private navCntrl: NavController, private renderer: Renderer2,
+              private selectedDateServise: SelectedDateService, public translate: TranslateService,
+              private geolocationServise: GeolocationService) {}
 
 /**
  * Setting geolocation and date
@@ -35,6 +50,42 @@ export class TimesViewPage implements OnInit {
 
   ionViewWillEnter(): void{
     this.getDataString();
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
+    this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
+  }
+
+
+  ionViewWillLeave(): void{
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+    this.buttonUpHandler();
+    this.buttonDownHandler();
+  }
+
+  onMenu() {
+    this.navCntrl.navigateForward('menu');
+  }
+
+  onBack() {
+    this.navCntrl.navigateForward('today-times-view');
+  }
+
+  onUp(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.scroll >= 100) {this.scroll = this.scroll - 100; }
+    this.content.scrollToPoint(0, this.scroll);
+  }
+
+  onDown(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.scroll <= this.contentDiv.nativeElement.scrollHeight - 395) {this.scroll = this.scroll + 100; }
+    this.content.scrollToPoint(0, this.scroll);
   }
 
 /**
@@ -72,22 +123,4 @@ export class TimesViewPage implements OnInit {
   // onArrowDown() {
   //   this.scroll = this.scroll + 25;
   // }
-
-  @HostListener('document:menubutton')
-  onMenu() {
-    this.router.navigate(['today-times-view']);
-  }
-  @HostListener('document:keydown.q')
-  onQ() {
-    this.router.navigate(['today-times-view']);
-  }
-  @HostListener('document:backbutton')
-  onBack() {
-    this.router.navigate(['menu']);
-  }
-  @HostListener('document:keydown.r')
-  onR() {
-    this.router.navigate(['menu']);
-  }
-
 }

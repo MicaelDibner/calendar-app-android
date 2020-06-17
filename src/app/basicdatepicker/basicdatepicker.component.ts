@@ -5,6 +5,7 @@ import { IDates } from '../core/model/IDates';
 import { DayTemplateContext } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-day-template-context';
 import { Router } from '@angular/router';
 import { CustomKeyboardService } from '../core/services/custom-keyboard.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-basicdatepicker',
@@ -21,10 +22,14 @@ export class BasicdatepickerComponent implements OnInit, AfterViewInit {
   hebrewDateModel: NgbDateStruct;
   private button1Handler;
   private button3Handler;
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
 
   constructor(private calendar: NgbCalendar, private selectedDateServise: SelectedDateService,
               public i18n: NgbDatepickerI18nHebrew, private hebrewCalendar: NgbCalendarHebrew,
-              private router: Router, private renderer: Renderer2 ) {
+              private navCntrl: NavController, private renderer: Renderer2 ) {
   }
 
   ngOnInit(): void {
@@ -49,6 +54,10 @@ export class BasicdatepickerComponent implements OnInit, AfterViewInit {
     this.datepicker.focus();
     this.button1Handler = this.renderer.listen('document', 'keydown.1', event => this.onStar());
     this.button3Handler = this.renderer.listen('document', 'keydown.3', event => this.onGrid());
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
 
   }
 
@@ -57,6 +66,10 @@ export class BasicdatepickerComponent implements OnInit, AfterViewInit {
     this.emitDate(this.model);
     this.button1Handler();
     this.button3Handler();
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
   }
 
   onGrid() {
@@ -67,22 +80,14 @@ export class BasicdatepickerComponent implements OnInit, AfterViewInit {
     this.datepicker.onNavigateEvent(0);
   }
 
-  @HostListener('document:menubutton')
   onMenu() {
-    this.router.navigate(['times-view']);
+    this.navCntrl.navigateForward('menu');
   }
-  @HostListener('document:keydown.q')
-  onQ() {
-    this.router.navigate(['times-view']);
-  }
-  @HostListener('document:backbutton')
+
   onBack() {
-    this.router.navigate(['menu']);
+    this.navCntrl.navigateForward('times-view');
   }
-  @HostListener('document:keydown.r')
-  onR() {
-    this.router.navigate(['menu']);
-  }
+ 
 
   emitDate(model: NgbDate) {
     this.dates = {

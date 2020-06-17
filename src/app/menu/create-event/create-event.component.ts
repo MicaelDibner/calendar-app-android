@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { DatePicker } from '@ionic-native/date-picker/ngx';
 import { INotification } from 'src/app/core/model/INotification';
@@ -27,6 +27,11 @@ export class CreateEventComponent implements OnInit {
   eventNotifications: INotification[] = [];
   addEventOpen = false;
 
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+
   eventForm = new FormGroup({
     date: new FormControl('', [Validators.required]),
     time: new FormControl('', Validators.required),
@@ -35,7 +40,7 @@ export class CreateEventComponent implements OnInit {
   });
 
   constructor(private datePicker: DatePicker, private eventsService: EventsService,
-              private router: Router, public navCtrl: NavController,
+              private renderer: Renderer2, public navCntrl: NavController,
               private datePipe: DatePipe, private notificationsService: NotificationsService) { }
 
   ngOnInit() {
@@ -49,14 +54,28 @@ export class CreateEventComponent implements OnInit {
     this.notifications.push(basicNotification);
   }
 
-/**
- * Redirect after succesfull creating of notification
- */
+  ionViewWillEnter(): void{
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+  }
 
-  // addNotification(){
-  //   this.navCtrl.navigateForward(['menu/createNotification']);
-  // }
+  ionViewWillLeave(): void{
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+  }
 
+  onMenu() {
+    console.log('back settings pressed');
+    this.navCntrl.pop();
+  }
+
+  onBack() {
+    console.log('menu pressed');
+  }
 /**
  * Creating notification and close CreateNotificationComponent
  */
@@ -153,22 +172,7 @@ export class CreateEventComponent implements OnInit {
     console.log(event);
     console.log('event created');
     this.eventsService.createEvent(event);
-    this.navCtrl.navigateForward('/hebrewdatepicker');
+    this.navCntrl.navigateForward('hebrewdatepicker');
   }
-
-  @HostListener('document:backbutton')
-onMenu() {
-    console.log('back pressed');
-    this.navCtrl.pop();
-  }
-@HostListener('document:keydown.r')
-onQ() {
-    console.log('back pressed');
-    this.navCtrl.pop();
-  }
-  @HostListener('document:keydown.enter')
-  onEnter() {
-    console.log('menu enter pressed');
-    }
 
 }

@@ -22,7 +22,7 @@ export class AppComponent {
   ) {
     this.initializeApp();
     console.log(window.innerHeight + ' ' + window.outerHeight + ' ' + window.innerWidth
-    + ' ' + window.outerHeight);
+    + ' ' + window.outerWidth);
   }
 
 
@@ -41,12 +41,5 @@ export class AppComponent {
     }); });
     this.translate.setDefaultLang('en');
     this.translate.use('he');
-  }
-/**
- * 1) Start listen menu button
- * Contains cardova handlers for menubutton and backbutton
- */
-  @HostListener('document:menubutton')
-  onMenu() {
   }
 }

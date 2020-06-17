@@ -1,9 +1,13 @@
 <div class="screen">
   <form [formGroup]="geolocationForm">
+  <h6>{{ 'CHANGE_GEOLOCATION' | translate }}</h6>
   <input id="typeahead-format" placeholder="Enter Country" type="text" class="form-control"  formControlName="country"
    [ngbTypeahead]="countrysearch" [resultFormatter]="formatter" [editable]='false'/>
   <input id="typeahead-format" placeholder="Enter City" type="text" class="form-control"  formControlName="city"
   [ngbTypeahead]="citysearch" [resultFormatter]="formatter" [editable]='false'/>
   </form>
   <button type="submit" [disabled]="!geolocationForm.valid" class="btn btn-primary" (keydown.enter)="onSubmit()">{{ 'UPDATE_GEOLOCATION' | translate }}</button>
+  <div>
+    Now: {{this.geolocation.city + ' ,' + this.geolocation.country}}
+  </div>
 </div>

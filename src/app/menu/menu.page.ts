@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, NgZone } from '@angular/core';
+import { Component, OnInit, HostListener, NgZone, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { SelectedDateService } from '../core/services/selected-date.service';
@@ -24,22 +24,42 @@ import { NavController } from '@ionic/angular';
     DatePicker
   ]
 })
-export class MenuPage implements OnInit {
+export class MenuPage {
   dates: IDates;
   myDate = new Date();
   hebrewDateModel: NgbDateStruct;
 
-  constructor(private router: Router, private ngZone: NgZone, public location: Location,
-              private selectedDateServise: SelectedDateService, private hebrewCalendar: NgbCalendarHebrew,
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+
+  constructor(private selectedDateServise: SelectedDateService, private hebrewCalendar: NgbCalendarHebrew,
               private datePicker: DatePicker, private notifications: NotificationsService,
-              private navCntrl: NavController) {
+              private navCntrl: NavController, private renderer: Renderer2) {
               }
 
-  ngOnInit() {
+  ionViewWillEnter(): void{
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
   }
 
-  public navigate(commands: any[]): void {
-    this.ngZone.run(() => this.router.navigate(commands)).then();
+  ionViewWillLeave(): void{
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+  }
+
+  onMenu() {
+    console.log('back menu pressed');
+    this.navCntrl.pop();
+  }
+
+  onBack() {
+    console.log('menu pressed');
   }
 
 /**
@@ -75,7 +95,7 @@ export class MenuPage implements OnInit {
  * Open CreateEventComponent
  */
   createEvent(){
-    this.router.navigate(['menu/createEvent']);
+    this.navCntrl.navigateForward('menu/createEvent');
   }
 
 /**
@@ -106,31 +126,11 @@ export class MenuPage implements OnInit {
       hebrewDate: this.hebrewCalendar.fromGregorian(model)
     };
     this.selectedDateServise.selectedDateSubscribtion.next(this.dates);
-    this.location.back();
+    this.navCntrl.pop();
   }
 
   openSettings(){
     this.navCntrl.navigateForward('menu/settings');
-  }
-
-  closeMenu(){
-    this.navCntrl.pop();
-  }
-
-@HostListener('document:backbutton')
-onMenu() {
-    console.log('back pressed');
-    this.navCntrl.pop();
-  }
-@HostListener('document:keydown.r')
-onQ() {
-    console.log('back pressed');
-    this.navCntrl.pop();
-    // this.location.back();
-}
-  @HostListener('document:keydown.enter')
-onEnter() {
-  console.log('menu enter pressed');
   }
 
 }

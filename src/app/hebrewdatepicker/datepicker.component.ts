@@ -69,7 +69,7 @@ const hagim = {
     {provide: NgbDatepickerKeyboardService, useClass: CustomKeyboardService},
   ]
 })
-export class DatepickerComponent implements OnInit {
+export class DatepickerComponent implements OnInit, AfterViewInit {
   @ViewChild('dp') datepicker: NgbDatepicker;
 
   model: NgbDateStruct;
@@ -82,6 +82,10 @@ export class DatepickerComponent implements OnInit {
   private button2Handler;
   private button0Handler;
   private buttonEnterHandler;
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
 
 
 
@@ -108,11 +112,11 @@ export class DatepickerComponent implements OnInit {
     }
   }
 
-  // ngAfterViewInit(): void {
-  //   this.datepicker.focusDate(this.model);
-  //   this.datepicker.focusSelect();
-  //   this.datepicker.focus();
-  // }
+  ngAfterViewInit(): void {
+    this.datepicker.focusDate(this.model);
+    this.datepicker.focusSelect();
+    this.datepicker.focus();
+  }
 
 /**
  * Method runs when user come back to screen (custom lifecycle hook for angular), developed by Ionic
@@ -122,20 +126,16 @@ export class DatepickerComponent implements OnInit {
   ionViewWillEnter(): void{
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.hebrewDate;
-    if (this.model === undefined) {
-      this.model = new NgbDate(this.dates.hebrewDate.year,
-        this.dates.hebrewDate.month,
-        this.dates.hebrewDate.day);
-    }
-    this.datepicker.focusDate(this.model);
-    this.datepicker.focusSelect();
-    this.datepicker.focus();
     // start listen the handlers
-    this.button4Handler = this.renderer.listen('document', 'keydown.4', event => this.onLeft());
-    this.button6Handler = this.renderer.listen('document', 'keydown.6', event => this.onRight());
-    this.button2Handler = this.renderer.listen('document', 'keydown.2', event => this.onUp());
-    this.button0Handler = this.renderer.listen('document', 'keydown.0', event => this.onDown());
-    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', event => this.onEnter());
+    this.button4Handler = this.renderer.listen('document', 'keydown.4', () => this.onLeft());
+    this.button6Handler = this.renderer.listen('document', 'keydown.6', () => this.onRight());
+    this.button2Handler = this.renderer.listen('document', 'keydown.2', () => this.onUp());
+    this.button0Handler = this.renderer.listen('document', 'keydown.0', () => this.onDown());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
   }
 
 /**
@@ -149,6 +149,10 @@ export class DatepickerComponent implements OnInit {
     this.button2Handler();
     this.button0Handler();
     this.buttonEnterHandler();
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
   }
 
 // button 3 handler
@@ -160,8 +164,7 @@ export class DatepickerComponent implements OnInit {
 // button 1 handler
 
   onRight() {
-    const {state, calendar} = this.datepicker;
-    this.datepicker.navigateTo(calendar.getNext(state.focusedDate, 'm', 1));
+    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'm', 1));
   }
 
 // button 2 handler
@@ -173,8 +176,7 @@ export class DatepickerComponent implements OnInit {
 // button 0 handler
 
   onDown() {
-    const {state, calendar} = this.datepicker;
-    this.datepicker.navigateTo(calendar.getNext(state.focusedDate, 'y', 1));
+    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'y', 1));
   }
 
 // button Enter handler (In CustomKeybordServise no default eventPropagination())
@@ -188,28 +190,16 @@ export class DatepickerComponent implements OnInit {
     this.navCtrl.navigateForward('day-view');
   }
 
-  @HostListener('document:menubutton')
-  onMenu() {
+  onBack() {
     console.log('menu pressed');
     this.navCtrl.navigateForward('basicdatepicker');
     this.emitDate(this.model);
   }
-  @HostListener('document:keydown.q')
-  onQ() {
-    console.log('menu pressed');
-    this.navCtrl.navigateForward('basicdatepicker');
-  }
-  @HostListener('document:backbutton')
-  onBack() {
-    console.log('back pressed');
-    this.navCtrl.navigateForward('menu');
-  }
-  @HostListener('document:keydown.r')
-  onR() {
-    console.log('back pressed');
-    this.navCtrl.navigateForward('menu');
-  }
 
+  onMenu() {
+    console.log('back pressed');
+    this.navCtrl.navigateForward('menu');
+  }
 /**
  * Methods check number of days for setting css classes
  */
@@ -260,27 +250,6 @@ export class DatepickerComponent implements OnInit {
     if ( arg0 === true) {
     const hlNumber = this.jewishCalendar.getYomTovIndex();
     return hagim[+hlNumber]; } else {return false; }
-
-    // if ( arg0 === true) {
-    //   switch (date.month) {
-    //     case 1:
-    //       if ( date.day === 3) {
-    //         return 'TZOM GEDALYA';
-    //       } else if (date.day === 10) {
-    //         return 'YOM HA-KIPURIM';
-    //       } else { break; }
-    //     case 4:
-    //       return 'TZOM ASARA BE-TEVET';
-    //     case 6:
-    //       return 'TZOM ESTER';
-    //     case 10:
-    //       return 'TZOM SHAVUA ESER ON TAMUZ';
-    //     case 11:
-    //       return 'TZOM TEISHA BE-AV';
-    //     default:
-    //       return false;
-    //   }
-    // }
   }
 
 

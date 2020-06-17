@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, NgZone } from '@angular/core';
+import { Component, OnInit, HostListener, NgZone, Renderer2 } from '@angular/core';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date-struct';
 import { SelectedDateService } from '../core/services/selected-date.service';
@@ -74,6 +74,8 @@ export class DayViewPage implements OnInit {
 };
   // array for new notifications for user events (ine array for all user events)
   newUserNotifications: INewNotification[] = [];
+
+
 
   hagim = {
     0: 'EREV_PESACH',
@@ -155,11 +157,16 @@ export class DayViewPage implements OnInit {
       'isYomShishi',
       'isShabbat'];
 
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+
   constructor(private selectedDateServise: SelectedDateService,
               private storageService: StorageService,
               public i18n: NgbDatepickerI18nHebrew,
-              public navCtrl: NavController,
-              private eventsService: EventsService,
+              public navCntrl: NavController,
+              private renderer: Renderer2,
               private notificationsService: NotificationsService,
               public datePipe: DatePipe,
               ) { }
@@ -190,10 +197,25 @@ export class DayViewPage implements OnInit {
     this.getEvents();
     this.dayInfo = this.selectedDateServise.selectedDateDayInfoSubscribtion.getValue();
     this.fillNotifications();
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
   }
 
   ionViewWillLeave(): void{
     this.emitNotificationsAndEvents();
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+  }
+
+  onMenu() {
+  }
+
+  onBack() {
+    this.navCntrl.navigateForward('menu');
   }
 
 /**
@@ -649,19 +671,10 @@ export class DayViewPage implements OnInit {
     } else { return 'Events:'; }
   }
 
-  @HostListener('document:backbutton')
-  onBack() {
-    this.navCtrl.navigateForward(['menu']);
-  }
-  @HostListener('document:keydown.r')
-  onR() {
-    this.navCtrl.navigateForward(['menu']);
-  }
-
 /**
  * Method close view
  */
   closeDayView(){
-    this.navCtrl.back();
+    this.navCntrl.pop();
   }
 }

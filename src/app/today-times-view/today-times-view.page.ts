@@ -1,10 +1,11 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
 import { TranslateService } from '@ngx-translate/core';
 import { IGeolocation } from '../core/model/IGeolocation';
 import { GeolocationService } from '../core/services/geolocation.service';
+import { NavController, IonContent } from '@ionic/angular';
 
 /**
  * Page calculates difference between times of prays and real time
@@ -16,6 +17,9 @@ import { GeolocationService } from '../core/services/geolocation.service';
   styleUrls: ['./today-times-view.page.scss'],
 })
 export class TodayTimesViewPage implements OnInit {
+  @ViewChild('content') content: IonContent;
+  @ViewChild('screen') contentDiv: ElementRef;
+  
   alos19Point8Degrees: string;
   alos16Point1Degrees: string;
   alos72: string;
@@ -47,7 +51,17 @@ export class TodayTimesViewPage implements OnInit {
   shaahZmanis16Point1Degrees: string;
   shaahZmanisGra: string;
 
-  constructor(private router: Router,  public translate: TranslateService, private geolocationService: GeolocationService) { }
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+  private buttonUpHandler;
+  private buttonDownHandler;
+
+  scroll = 0;
+
+  constructor(private navCntrl: NavController,  public translate: TranslateService, private geolocationService: GeolocationService,
+              private renderer: Renderer2) { }
 
 /**
  * Start calculation into JS native setInterval method
@@ -106,6 +120,12 @@ export class TodayTimesViewPage implements OnInit {
     const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
     geoLocation.elevation, geoLocation.time_zone);
     this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
+    this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
   }
 
 /**
@@ -114,7 +134,36 @@ export class TodayTimesViewPage implements OnInit {
 
   ionViewWillLeave(): void{
     clearInterval(this.refresh);
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+    this.buttonUpHandler();
+    this.buttonDownHandler();
   }
+
+
+  onMenu() {
+    this.navCntrl.navigateForward('menu');
+  }
+
+
+  onBack() {
+    this.navCntrl.navigateForward('study-view');
+  }
+
+  onUp(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.scroll >= 100) {this.scroll = this.scroll - 100; }
+    this.content.scrollToPoint(0, this.scroll);
+  }
+
+  onDown(event: KeyboardEvent) {
+    event.preventDefault();
+    if (this.scroll <= this.contentDiv.nativeElement.scrollHeight - 395) {this.scroll = this.scroll + 100; }
+    this.content.scrollToPoint(0, this.scroll);
+  }
+
 
 /**
  * Calculate difference between date numbers into string format
@@ -155,22 +204,5 @@ export class TodayTimesViewPage implements OnInit {
   // onArrowDown() {
   //   this.scroll = this.scroll + 25;
   // }
-
-  @HostListener('document:menubutton')
-  onMenu() {
-    this.router.navigate(['study-view']);
-  }
-  @HostListener('document:keydown.q')
-  onQ() {
-    this.router.navigate(['study-view']);
-  }
-  @HostListener('document:backbutton')
-  onBack() {
-    this.router.navigate(['menu']);
-  }
-  @HostListener('document:keydown.r')
-  onR() {
-    this.router.navigate(['menu']);
-  }
 
 }

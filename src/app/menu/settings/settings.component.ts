@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { StorageService } from 'src/app/core/services/storage.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,10 +9,38 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
 
-  constructor(private navCntrl: NavController, private storageService: StorageService, public translate: TranslateService) { }
+  constructor(private renderer: Renderer2,
+              private navCntrl: NavController, private storageService: StorageService, public translate: TranslateService) { }
 
   ngOnInit() {}
+
+  ionViewWillEnter(): void{
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+  }
+
+  ionViewWillLeave(): void{
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+  }
+
+  onMenu() {
+    console.log('back settings pressed');
+    this.navCntrl.pop();
+  }
+
+  onBack() {
+    console.log('menu pressed');
+  }
 
 /**
  * Method calls method in StorageService for writing text file
@@ -48,18 +76,6 @@ changeLanguage() {
 
 changeGeolocation(){
   this.navCntrl.navigateForward('menu/geolocation');
-}
-
-  @HostListener('document:backbutton')
-onMenu() {
-    console.log('back settings pressed');
-    this.navCntrl.pop();
-  }
-@HostListener('document:keydown.r')
-onQ() {
-    console.log('back settings pressed');
-    this.navCntrl.pop();
-    // this.location.back();
 }
 
 }

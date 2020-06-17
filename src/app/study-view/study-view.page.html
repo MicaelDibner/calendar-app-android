@@ -1,5 +1,5 @@
-<ion-content [scrollY]="true">
-    <div class="screen" [class.hebrewText]="this.translate.currentLang === 'he'">
+<ion-content #content>
+    <div class="screen" #screen [class.hebrewText]="this.translate.currentLang === 'he'">
 <h6>{{this.time}}</h6> 
 <h6>{{ 'MOLAD_CHALAKIM' | translate }}</h6> 
 {{'Molad chalakim: ' + this.chalakim}} <br>

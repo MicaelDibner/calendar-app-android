@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, Renderer2 } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
@@ -19,13 +19,46 @@ const countries = ['Israel', 'USA', 'Russia', 'France', 'Germany'];
 export class GeolocationComponent implements OnInit {
   cities = [];
   countrySelectedSub: any;
+  geolocation: IGeolocation;
 
-  constructor(private navCntrl: NavController, public geolocationService: GeolocationService) { }
+  private buttonBackHandler;
+  private buttonMenuHandler;
+  private buttonRHandler;
+  private buttonQHandler;
+
+  constructor(private navCntrl: NavController, private renderer: Renderer2,
+              public geolocationService: GeolocationService) { }
+
 
   geolocationForm = new FormGroup({
     country: new FormControl('', Validators.required),
     city: new FormControl({value: '', disabled: true}, Validators.required),
   });
+
+  ionViewWillEnter(): void{
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
+    this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.geolocation = this.geolocationService.selectedGeolocationSubscribtion.getValue();
+  }
+
+  ionViewWillLeave(): void{
+    this.buttonBackHandler();
+    this.buttonMenuHandler();
+    this.buttonRHandler();
+    this.buttonQHandler();
+    this.countrySelectedSub.unsubscride();
+  }
+
+  onMenu() {
+    console.log('back geolocation pressed');
+    this.navCntrl.pop();
+  }
+
+  onBack() {
+    console.log('menu pressed');
+  }
 
 
   formatter = (result: string) => result.toUpperCase();
@@ -47,6 +80,7 @@ export class GeolocationComponent implements OnInit {
 
   ngOnInit() {
     this.onFormChanges();
+    this.geolocation = this.geolocationService.selectedGeolocationSubscribtion.getValue();
   }
 
   onFormChanges(){
@@ -65,10 +99,6 @@ export class GeolocationComponent implements OnInit {
         this.geolocationForm.get('city').disable();
       }
     });
-  }
-
-  ionViewWillLeave(): void{
-    this.countrySelectedSub.unsubscride();
   }
 
   onSubmit(){
@@ -90,18 +120,6 @@ export class GeolocationComponent implements OnInit {
       }
     });
     this.navCntrl.pop();
-  }
-
-  @HostListener('document:backbutton')
-  onMenu() {
-      console.log('back settings pressed');
-      this.navCntrl.pop();
-    }
-  @HostListener('document:keydown.r')
-  onQ() {
-      console.log('back settings pressed');
-      this.navCntrl.pop();
-      // this.location.back();
   }
 
 }
