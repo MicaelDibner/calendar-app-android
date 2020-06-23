@@ -5,6 +5,7 @@ import {DatepickerComponent} from './datepicker.component';
 import { CommonModule } from '@angular/common';
 import { HebrewDatepickerRoutingModule } from './hebrewdatepicker-routing.module';
 import { CustomKeyboardService } from '../core/services/custom-keyboard.service';
+import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 
 
@@ -12,7 +13,8 @@ import { CustomKeyboardService } from '../core/services/custom-keyboard.service'
   imports: [CommonModule,
     FormsModule,
     NgbModule,
-    HebrewDatepickerRoutingModule],
+    HebrewDatepickerRoutingModule,
+    NavigationButtonsModule],
   declarations: [DatepickerComponent],
   bootstrap: [DatepickerComponent],
   providers: [CustomKeyboardService]

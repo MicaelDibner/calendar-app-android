@@ -32,28 +32,12 @@ export class CustomKeyboardService extends NgbDatepickerKeyboardService {
     const state = dp.state;
     switch (event.keyCode) {
       case keyCode.ArrowLeft:
-        dp.focusDate(dp.calendar.getPrev(state.focusedDate, 'd', 1));
-        dp.focusSelect();
-        event.preventDefault();
-        event.stopPropagation();
         break;
       case keyCode.ArrowUp:
-        dp.focusDate(dp.calendar.getPrev(state.focusedDate, 'd', dp.calendar.getDaysPerWeek()));
-        dp.focusSelect();
-        event.preventDefault();
-        event.stopPropagation();
         break;
       case keyCode.ArrowRight:
-        dp.focusDate(dp.calendar.getNext(state.focusedDate, 'd', 1));
-        dp.focusSelect();
-        event.preventDefault();
-        event.stopPropagation();
         break;
       case keyCode.ArrowDown:
-        dp.focusDate(dp.calendar.getNext(state.focusedDate, 'd', dp.calendar.getDaysPerWeek()));
-        dp.focusSelect();
-        event.preventDefault();
-        event.stopPropagation();
         break;
       case keyCode.Enter:
         break;

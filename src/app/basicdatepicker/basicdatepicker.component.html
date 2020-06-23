@@ -1,26 +1,36 @@
-<div id="calendar">
-  <ngb-datepicker [showWeekdays]="false" #dp [(ngModel)]="model" [displayMonths]="1"
-  [footerTemplate]="footerTemplate" [dayTemplate]="dt"></ngb-datepicker>
-
-  <ng-template #dt let-date let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled">
-    <div class="hebrew-day" [class.friday]="isFriday(date)" [class.saturday]="isSaturday(date)" [class.selected]="selected"
-         [class.outside]="date.month !== currentMonth">
-      {{ date.day }}
-  </div>
+<div class="date-top">
+  <div class="georgianDate">{{this.getHebrewDate()}}</div>
+</div><div id="calendar">
+  <ngb-datepicker navigation='none' [showWeekdays]="true" #dp [(ngModel)]="model" [displayMonths]="1" [dayTemplate]="dt"
+  [dayTemplateData]="dayTemplateData">
+  <ng-template ngbDatepickerContent>
+    <div *ngFor="let month of dp.state.months">
+      <ngb-datepicker-month [month]="month"></ngb-datepicker-month>
+    </div>
   </ng-template>
+</ngb-datepicker>
 
-
-  <ng-template #footerTemplate>
-    <div class="info">
-      <div class="nebrewDate">{{this.getHebrewDate()}}</div>
-      <div class="georgianDate">{{this.getGeorgianDate()}}</div>
-      <div class="tcontainer"><div class="ticker-wrap"><div class="ticker-move">
-        <div class="ticker-item">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-        <div class="ticker-item"> ‫ מברכין‬ ‫‪-‬‬ ‫ויצא‬ ‫פרשת‬ ‫ע‫"ש‬
-</div>
-        <div class="ticker-item">Fusce dapibus turpis vel nisi malesuada sollicitudin.</div>
-        <div class="ticker-item">Pellentesque auctor molestie orci ut blandit.</div>
-      </div></div></div>
+  <ng-template #dt let-date let-today="today" let-data="data" let-currentMonth="currentMonth" let-selected="selected" let-disabled="disabled">
+    <div class="gregorian-day" [class.friday]="(data['isYomShishi'])" [class.saturday]="(data['isShabbat'])" 
+    [class.outside]="date.month !== currentMonth" [class.selected]="selected"
+    [class.yomTov]="(data['yomtov'])" [class.today]="today" [class.holyday]="(data['holyday'])" 
+    [class.roshhodesh]="(data['roshhodesh'])" [class.taanis]="(data['taanis'])" 
+    [class.chanukah]="(data['chanukah']) !== -1" [class.omer]="(data['aseresYomei'])">
+    <div class="gregorian-num"><span *ngIf="data['chanukah'] !== -1" class="holydayNumber" 
+      [class.outside]="date.month !== currentMonth">{{data['chanukah']}}</span>
+      <span *ngIf="data['omer'] !== -1" class="holydayNumber" [class.outside]="date.month !== currentMonth">
+        {{data['omer']}}</span></div>
+    <div class="hebrew-num"> <span *ngIf="data['shabbatMevorachim']" class="holydayNumber" [class.outside]="date.month !== currentMonth">M</span>
+      <span *ngIf="data['kidushLevana']" class="holydayNumber" [class.outside]="date.month !== currentMonth">KL</span>{{date.day}}</div>
+    <!-- <div class="event">
+      <span *ngIf="data['events']">{{'E:' + data['events']}}</span>
+      <span *ngIf="data['notifications']">{{'N:' + data['notifications']}}</span>
+    </div> -->
     </div>
   </ng-template>
 </div>
+<div class="info">
+  <marquee behavior="scroll" direction="left">{{this.getEventsData()}}</marquee>
+  <div class="dateInfo">{{this.getGeorgianDate()}}</div>
+</div>
+<app-navigation-buttons leftbutton="copy-outline" rightbutton="settings-outline"></app-navigation-buttons>

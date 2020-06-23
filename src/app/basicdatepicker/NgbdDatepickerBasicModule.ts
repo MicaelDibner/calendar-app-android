@@ -5,9 +5,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {BasicdatepickerComponent} from './basicdatepicker.component';
 import { CommonModule } from '@angular/common';
 import { BasicDatepickerRoutingModule } from './basicdatepicker-routing.module';
+import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
+import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, NgbModule, BasicDatepickerRoutingModule],
+  imports: [CommonModule, FormsModule, NgbModule, BasicDatepickerRoutingModule,
+    NavigationButtonsModule],
   declarations: [BasicdatepickerComponent],
   bootstrap: [BasicdatepickerComponent]
 })

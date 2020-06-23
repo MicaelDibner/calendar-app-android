@@ -1,9 +1,9 @@
-import { Component, OnInit, HostListener, Renderer2, ElementRef, ViewChild } from '@angular/core';
+import { Component, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { GeoLocation, JewishCalendar, Parsha, YerushalmiYomiCalculator, YomiCalculator, Daf} from 'kosher-zmanim';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar, NgbDate } from '@ng-bootstrap/ng-bootstrap';
 import { RambamCalculator } from '../core/RambamCalculator';
 import { RambamPerek1NameJSON } from '../core/model/RambamPerek1NameJSON';
 import { RambamPerek3NameJSON } from '../core/model/RambamPerek3NameJSON';
@@ -28,6 +28,8 @@ import { HafetzHaimLongNameJSON } from '../core/model/HafetzHaimLongNameJSON';
 
 import { DateTime } from 'luxon';
 import { NavController, IonContent } from '@ionic/angular';
+import { HalahaYomitCalculator } from '../core/HalahaYomitCalculator';
+import { HalahaYomiNameJSON } from '../core/model/HalahaYomiNameJSON';
 
 
 /**
@@ -39,7 +41,7 @@ import { NavController, IonContent } from '@ionic/angular';
   templateUrl: './study-view.page.html',
   styleUrls: ['./study-view.page.scss'],
 })
-export class StudyViewPage implements OnInit {
+export class StudyViewPage {
   @ViewChild('content') content: IonContent;
   @ViewChild('screen') contentDiv: ElementRef;
   scroll = 0;
@@ -70,6 +72,7 @@ export class StudyViewPage implements OnInit {
   DersoHalhotNameJSON = DersoHalhotNameJSON;
   HafetzHaimRegularNameJSON = HafetzHaimRegularNameJSON;
   HafetzHaimLongNameJSON = HafetzHaimLongNameJSON;
+  HalahaYomiNameJSON = HalahaYomiNameJSON;
   chalakim: any;
   chalakimTohu: any;
   hebrewModel: NgbDateStruct;
@@ -89,9 +92,13 @@ export class StudyViewPage implements OnInit {
   private buttonQHandler;
   private buttonUpHandler;
   private buttonDownHandler;
+  private buttonRightHandler;
+  private buttonLeftHandler;
+  halahaYomit: number;
 
   constructor(private navCntrl: NavController, private renderer: Renderer2,
               private selectedDateServise: SelectedDateService, public translate: TranslateService,
+              private calendar: NgbCalendar
     ) {}
 
 
@@ -103,7 +110,31 @@ export class StudyViewPage implements OnInit {
       this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
       this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
       this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
+      this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+      this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
     }
+  onLeft(): boolean | void {
+    const ngbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
+    this.model = this.calendar.getPrev(ngbDate, 'd', 1);
+    let dateForCalendar: DateTime = DateTime.fromObject({
+      year: this.model.year,
+      month: this.model.month,
+      day: this.model.day,
+    });
+    this.jewishCalendar.setDate(dateForCalendar);
+    this.getDataDay();
+  }
+  onRight(): boolean | void {
+    const ngbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
+    this.model = this.calendar.getNext(ngbDate, 'd', 1);
+    let dateForCalendar: DateTime = DateTime.fromObject({
+      year: this.model.year,
+      month: this.model.month,
+      day: this.model.day,
+    });
+    this.jewishCalendar.setDate(dateForCalendar);
+    this.getDataDay();
+  }
 
 
     ionViewWillLeave(): void{
@@ -113,6 +144,8 @@ export class StudyViewPage implements OnInit {
       this.buttonQHandler();
       this.buttonUpHandler();
       this.buttonDownHandler();
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
     }
 
     onMenu() {
@@ -133,15 +166,12 @@ export class StudyViewPage implements OnInit {
       event.preventDefault();
       if (this.scroll <= this.contentDiv.nativeElement.scrollHeight - 395) {this.scroll = this.scroll + 100; }
       this.content.scrollToPoint(0, this.scroll);
-      console.log(this.scroll);
     }
 
 /**
  * Setting geolocation
  */
 
-  ngOnInit(): void {
-  }
 /**
  * Setting emitted date from SelectedDateService
  */
@@ -168,11 +198,6 @@ export class StudyViewPage implements OnInit {
         day: this.model.day,
       });
       this.jewishCalendar.setDate(dateForCalendar);
-      // this.jewishCalendar.setJewishMonth(this.hebrewModel.month);
-      console.log(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
-      this.time = '' + this.jewishCalendar.getGregorianYear() +
-      (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
-      console.log('data setted: ' + this.time);
       this.getDataDay();
   }
 
@@ -181,6 +206,8 @@ export class StudyViewPage implements OnInit {
  */
 
   getDataDay() {
+    this.time = '' + this.jewishCalendar.getGregorianYear() +
+    (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
     console.log('get data started');
     this.chalakim = this.jewishCalendar.getMolad().getMoladChalakim();
     this.chalakimTohu = this.jewishCalendar.getChalakimSinceMoladTohu();
@@ -204,5 +231,6 @@ export class StudyViewPage implements OnInit {
     this.dersoMoshar = DersoMosharCalculator.getDersoMocharChapter(this.jewishCalendar);
     this.dersoHalhot = DersoHalhotCalculator.getDersoHalhotChapter(this.jewishCalendar);
     this.hafetzHaim = HafetzHaimCalculator.getHafetzHaimChapter(this.jewishCalendar);
+    this.halahaYomit = HalahaYomitCalculator.getHalahaYomitChapter(this.jewishCalendar);
   }
 }

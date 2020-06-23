@@ -18,6 +18,7 @@ import { DatePipe, Location } from '@angular/common';
 import { NavController } from '@ionic/angular';
 import { IDayInfoModel } from '../core/model/IDayInfoModel';
 import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
+import { async } from '@angular/core/testing';
 
 const hagim = {
   0: 'EREV_PESACH',
@@ -81,6 +82,10 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   private button6Handler;
   private button2Handler;
   private button0Handler;
+  private buttonUpHandler;
+  private buttonRightHandler;
+  private buttonDownHandler;
+  private buttonLeftHandler;
   private buttonEnterHandler;
   private buttonBackHandler;
   private buttonMenuHandler;
@@ -94,11 +99,11 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
               public eventsService: EventsService, private renderer: Renderer2,
               private datePipe: DatePipe) {
     // binding day data
-    this.dayTemplateData = this.dayTemplateData.bind(this);
     this.jewishCalendar.setInIsrael(true);
     this.jewishCalendar.setUseModernHolidays(false);
   }
   ngOnInit(): void {
+    this.dayTemplateData = this.dayTemplateData.bind(this);
     // creating model instance for NgbDatepicker
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     if (this.dates === null) {
@@ -113,9 +118,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.datepicker.focusDate(this.model);
-    this.datepicker.focusSelect();
-    this.datepicker.focus();
+    
   }
 
 /**
@@ -127,15 +130,22 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.hebrewDate;
     // start listen the handlers
-    this.button4Handler = this.renderer.listen('document', 'keydown.4', () => this.onLeft());
-    this.button6Handler = this.renderer.listen('document', 'keydown.6', () => this.onRight());
-    this.button2Handler = this.renderer.listen('document', 'keydown.2', () => this.onUp());
-    this.button0Handler = this.renderer.listen('document', 'keydown.0', () => this.onDown());
+    this.button4Handler = this.renderer.listen('document', 'keydown.4', () => this.on4());
+    this.button6Handler = this.renderer.listen('document', 'keydown.6', () => this.on6());
+    this.button2Handler = this.renderer.listen('document', 'keydown.2', () => this.on2());
+    this.button0Handler = this.renderer.listen('document', 'keydown.0', () => this.on0());
+    this.buttonUpHandler  = this.renderer.listen('window', 'keydown.arrowup', () => this.onUp());
+    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+    this.buttonDownHandler = this.renderer.listen('window', 'keydown.arrowdown', () => this.onDown());
+    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
     this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
     this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
     this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
     this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.datepicker.focusDate(this.model);
+    this.datepicker.focusSelect();
+    this.datepicker.focus();
   }
 
 /**
@@ -148,6 +158,10 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.button6Handler();
     this.button2Handler();
     this.button0Handler();
+    this.buttonUpHandler();
+    this.buttonRightHandler();
+    this.buttonDownHandler();
+    this.buttonLeftHandler();
     this.buttonEnterHandler();
     this.buttonBackHandler();
     this.buttonMenuHandler();
@@ -155,28 +169,66 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.buttonQHandler();
   }
 
-// button 3 handler
+// button ArrowUp handler
 
   onLeft() {
-    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'm', -1));
+    this.datepicker.focusDate(this.datepicker.calendar.getNext(this.datepicker.state.focusedDate, 'd', 1));
+    this.datepicker.focusSelect();
   }
 
-// button 1 handler
+// button ArrowRight handler
 
   onRight() {
-    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'm', 1));
+    this.datepicker.focusDate(this.datepicker.calendar.getPrev(this.datepicker.state.focusedDate, 'd', 1));
+    this.datepicker.focusSelect();
+  }
+
+// button ArrowUp handler
+
+  onUp() {
+    this.datepicker.focusDate(this.datepicker.calendar.getPrev
+      (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
+    this.datepicker.focusSelect();
+  }
+
+// button ArrowDown handler
+
+  onDown() {
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+      (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
+    this.datepicker.focusSelect();
+  }
+
+  // button 6 handler
+
+  on6() {
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+      (this.datepicker.state.focusedDate, 'm', 1));
+    this.datepicker.focusSelect();
+  }
+
+// button 4 handler
+
+  on4() {
+    this.datepicker.focusDate(this.datepicker.calendar.getPrev
+      (this.datepicker.state.focusedDate, 'm', 1));
+    this.datepicker.focusSelect();
   }
 
 // button 2 handler
 
-  onUp() {
-    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'y', -1));
+  on2() {
+    this.datepicker.focusDate(this.datepicker.calendar.getPrev
+      (this.datepicker.state.focusedDate, 'y', 1));
+    this.datepicker.focusSelect();
   }
 
 // button 0 handler
 
-  onDown() {
-    this.datepicker.navigateTo(this.calendar.getNext(this.datepicker.state.focusedDate, 'y', 1));
+  on0() {
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+      (this.datepicker.state.focusedDate, 'y', 1));
+    this.datepicker.focusSelect();
   }
 
 // button Enter handler (In CustomKeybordServise no default eventPropagination())
@@ -204,9 +256,6 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
  * Methods check number of days for setting css classes
  */
 
-  isFriday = (date: NgbDate) =>  this.calendar.getWeekday(date) === 5;
-  isSaturday = (date: NgbDate) =>  this.calendar.getWeekday(date) === 6;
-
 /**
  * Method add custom data to let-data="data" in day-template #dt
  */
@@ -220,11 +269,11 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
       holyday: this.jewishCalendar.isYomTov(),
       omer: this.jewishCalendar.getDayOfOmer(),
       chanukah: this.jewishCalendar.getDayOfChanukah(),
-      events: this.eventsService.getEventCalendarView(gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
-      eventsTitles: this.eventsService.getEventDescriptionsCalendarView
-      (gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
-      notifications: this.eventsService.getNotificationsNumberCalendarView
-      (gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
+      // events: this.eventsService.getEventCalendarView(gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
+      // eventsTitles: this.eventsService.getEventDescriptionsCalendarView
+      // (gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
+      // notifications: this.eventsService.getNotificationsNumberCalendarView
+      // (gregorianDate.year + '-' + gregorianDate.month + '-' + gregorianDate.day),
       roshhodesh: this.jewishCalendar.isRoshChodesh(),
       holydayNumber: this.jewishCalendar.getYomTovIndex(),
       taanis: this.getTaanisName(this.jewishCalendar.isTaanis()),
@@ -233,12 +282,24 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
       specialParasha: this.jewishCalendar.getSpecialShabbos(),
       shabbatMevorachim: this.jewishCalendar.isShabbosMevorchim(),
       aseresYomei: this.jewishCalendar.isAseresYemeiTeshuva(),
-      isYomShishi: this.isFriday(date),
-      isShabbat: this.isSaturday(date),
+      isYomShishi: this.isFriday(this.jewishCalendar.getDayOfWeek()),
+      isShabbat: this.isSaturday(this.jewishCalendar.getDayOfWeek()),
       molad: this.jewishCalendar.getMoladAsDate().ts,
       candleLighting: this.jewishCalendar.hasCandleLighting()
     };
   }
+
+  isFriday(dayNum: number) {
+    if(dayNum === 6) {return true; } else {
+      return false;
+    }
+  }
+  isSaturday(dayNum: number) {
+    if(dayNum === 7) {return true; } else {
+      return false;
+    }
+  }
+
   getKidushLavana(day: number) {
     let data = new Date(this.jewishCalendar.getSofZmanKidushLevana15Days().ts);
     if (data.getDate() === day) {
@@ -286,8 +347,8 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     if (this.dayTemplateData(modelNgbDate).specialParasha) {
       parasha = parasha + ' | SPECIAL_PARASHA: ' + Parsha[this.dayTemplateData(modelNgbDate).parasha];
     }
-    if (this.dayTemplateData(modelNgbDate).eventsTitles) {
-      events = ' EVENTS: ' + (this.dayTemplateData(modelNgbDate).eventsTitles); }
+    // if (this.dayTemplateData(modelNgbDate).eventsTitles) {
+    //   events = ' EVENTS: ' + (this.dayTemplateData(modelNgbDate).eventsTitles); }
     if (this.dayTemplateData(modelNgbDate).roshhodesh) {
       this.jewishCalendar.setGregorianDate(modelNgbDate.year, modelNgbDate.month - 1, modelNgbDate.day);
       molad = ' MOLAD: ' + this.datePipe.transform(this.dayTemplateData(modelNgbDate).molad, 'yyyy-MM-dd HH:mm');
@@ -353,15 +414,5 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
       hebrewDate: model
     };
     this.selectedDateServise.selectedDateSubscribtion.next(this.dates);
-  }
-
-  navigate(number: number) {
-    const {state, calendar} = this.datepicker;
-    this.datepicker.navigateTo(calendar.getNext(state.firstDate, 'm', number));
-  }
-
-  today() {
-    const {calendar} = this.datepicker;
-    this.datepicker.navigateTo(calendar.getToday());
   }
 }

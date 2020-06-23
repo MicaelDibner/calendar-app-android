@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { RabbiViewPageRoutingModule } from './rabbi-view-routing.module';
 
 import { RabbiViewPage } from './rabbi-view.page';
+import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    RabbiViewPageRoutingModule
+    RabbiViewPageRoutingModule,
+    NavigationButtonsModule
   ],
   declarations: [RabbiViewPage]
 })

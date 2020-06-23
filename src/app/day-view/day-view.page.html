@@ -295,7 +295,7 @@
       </div>
 
 
-  <ng-container *ngIf="this.dayInfo.events">
+  <ng-container *ngIf="this.userEvents !== undefined">
       <!-- <h4>{{this.isEvents()}}</h4>  -->
     <div *ngFor="let event of userEvents; index as eventIndex;">
         <button type="button" class="btn btn-outline-primary" (keydown.enter)="event.isCollapsed = !event.isCollapsed"
@@ -324,3 +324,4 @@
 <button type="button" class="btn btn-primary" autofocus  (keydown.enter)="closeDayView()">Close</button>
 </div>
 </ion-content>
+<app-navigation-buttons rightbutton="arrow-undo"></app-navigation-buttons>

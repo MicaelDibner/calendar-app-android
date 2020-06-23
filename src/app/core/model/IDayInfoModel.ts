@@ -7,8 +7,6 @@ export interface IDayInfoModel{
     holyday: boolean;
     omer: number;
     chanukah: number;
-    events: number;
-    eventsTitles: string;
     roshhodesh: boolean;
     holydayNumber: number;
     taanis: string;
@@ -20,4 +18,5 @@ export interface IDayInfoModel{
     isYomShishi: boolean;
     isShabbat: boolean;
     molad: Date;
+    candleLighting: boolean;
 }

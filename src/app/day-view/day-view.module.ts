@@ -9,6 +9,9 @@ import { DayViewPageRoutingModule } from './day-view-routing.module';
 import { DayViewPage } from './day-view.page';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MenuPageModule } from '../menu/menu.module';
+import { NavigationButtonsComponent } from '../navigation-buttons/navigation-buttons.component';
+import { AppModule } from '../app.module';
+import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 @NgModule({
   imports: [
@@ -17,7 +20,8 @@ import { MenuPageModule } from '../menu/menu.module';
     IonicModule,
     NgbModule,
     DayViewPageRoutingModule,
-    MenuPageModule
+    MenuPageModule,
+    NavigationButtonsModule
   ],
   declarations: [DayViewPage]
 })
