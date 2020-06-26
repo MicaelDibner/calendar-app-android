@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, Renderer2, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
+import { GeoLocation, ComplexZmanimCalendar, AstronomicalCalendar} from 'kosher-zmanim';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
 import { NgbDateStruct, NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GeolocationService } from '../core/services/geolocation.service';
 import { IGeolocation } from '../core/model/IGeolocation';
 import { NavController, IonContent } from '@ionic/angular';
+import { AstronomicalCalculator } from 'kosher-zmanim/dist/types/util/AstronomicalCalculator';
 
 /**
  * Page calculates times of prays for date, received from SelectedDateService
@@ -117,6 +118,10 @@ export class TimesViewPage implements OnInit {
     const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
     geoLocation.elevation, geoLocation.time_zone);
     this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
+    let aC = {} as AstronomicalCalculator;
+    aC = this.complexZmanimCalendar.getAstronomicalCalculator();
+    aC.setRefraction(34/60); //pasteNumberThere
+    this.complexZmanimCalendar.setAstronomicalCalculator(aC);
   }
 
   setCalendarDate() {

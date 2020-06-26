@@ -31,6 +31,9 @@ import { NavController, IonContent } from '@ionic/angular';
 import { HalahaYomitCalculator } from '../core/HalahaYomitCalculator';
 import { HalahaYomiNameJSON } from '../core/model/HalahaYomiNameJSON';
 
+import { hebrewNumerals } from '../core/hebrew';
+import { CustomYerushalmiYomiCalculator } from '../core/CustomYerushalmiYomiCalculator';
+
 
 /**
  * Page shows data about stydies for date, received from SelectedDateService
@@ -47,6 +50,7 @@ export class StudyViewPage {
   scroll = 0;
 
   jewishCalendar = new JewishCalendar();
+  jewishCalendarTalmudYerushalmi = new JewishCalendar();
   dates: IDates;
   model: NgbDateStruct;
   parsha: string;
@@ -54,8 +58,8 @@ export class StudyViewPage {
   dafYomiYerushalmi: Daf;
   dafYomiBavli: Daf;
   masechta: string;
-  masechtapage: string;
-  masechtanumber: string;
+  masechtapage: number;
+  masechtanumber: number;
   masechtajrs: string;
   masechtapagejrs: string;
   masechtanumberjrs: string;
@@ -95,11 +99,17 @@ export class StudyViewPage {
   private buttonRightHandler;
   private buttonLeftHandler;
   halahaYomit: number;
+  molad: any;
 
   constructor(private navCntrl: NavController, private renderer: Renderer2,
               private selectedDateServise: SelectedDateService, public translate: TranslateService,
               private calendar: NgbCalendar
     ) {}
+    
+    hebrewNumerals(gregorianNumber: number){
+      console.log(gregorianNumber);
+      return hebrewNumerals(gregorianNumber);
+    }
 
 
     ionViewWillEnter(): void{
@@ -209,15 +219,16 @@ export class StudyViewPage {
     this.time = '' + this.jewishCalendar.getGregorianYear() +
     (this.jewishCalendar.getGregorianMonth() + 1) + this.jewishCalendar.getGregorianDayOfMonth();
     console.log('get data started');
+    this.molad = this.jewishCalendar.getMoladAsDate().ts;
     this.chalakim = this.jewishCalendar.getMolad().getMoladChalakim();
     this.chalakimTohu = this.jewishCalendar.getChalakimSinceMoladTohu();
     this.parsha = Parsha[this.jewishCalendar.getParsha()];
     this.specialParsha = Parsha[this.jewishCalendar.getParsha()];
-    this.dafYomiYerushalmi = YerushalmiYomiCalculator.getDafYomiYerushalmi(this.jewishCalendar);
+    this.dafYomiYerushalmi = CustomYerushalmiYomiCalculator.getDafYomiYerushalmi(this.jewishCalendar);
     this.dafYomiBavli = YomiCalculator.getDafYomiBavli(this.jewishCalendar);
     this.masechta = this.dafYomiBavli.getMasechta() + ' ' + this.dafYomiBavli.getMasechtaTransliterated();
-    this.masechtapage = ('Daf: ' + this.dafYomiBavli.getDaf());
-    this.masechtanumber = ('Masechta number: ' + (this.dafYomiBavli.getMasechtaNumber() + 1));
+    this.masechtapage = this.dafYomiBavli.getDaf();
+    this.masechtanumber = this.dafYomiBavli.getMasechtaNumber();
     this.masechtajrs = this.dafYomiYerushalmi.getYerushalmiMasechta() + ' ' + this.dafYomiYerushalmi.getYerushlmiMasechtaTransliterated();
     this.masechtapagejrs = ('Daf: ' + this.dafYomiYerushalmi.getDaf());
     this.masechtanumberjrs = ('Masechta number: ' + this.dafYomiYerushalmi.getMasechtaNumber());
@@ -233,4 +244,8 @@ export class StudyViewPage {
     this.hafetzHaim = HafetzHaimCalculator.getHafetzHaimChapter(this.jewishCalendar);
     this.halahaYomit = HalahaYomitCalculator.getHalahaYomitChapter(this.jewishCalendar);
   }
+  // getDafYerushalmi(): Daf {
+  //   this.jewishCalendarTalmudYerushalmi.setJewishDate(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
+  //   return YerushalmiYomiCalculator.getDafYomiYerushalmi(this.jewishCalendarTalmudYerushalmi);
+  // }
 }

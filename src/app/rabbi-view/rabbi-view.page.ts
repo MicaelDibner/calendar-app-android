@@ -121,7 +121,7 @@ getRabbyInfo() {
 }
 
 getHebrewDate(): string {
-  return this.i18n.getDayNumerals(this.hebrewModel) + ' ' + this.i18n.getMonthShortName(this.hebrewModel.month)
+  return this.i18n.getDayNumerals(this.hebrewModel) + ' ' + this.i18n.getMonthFullName(this.model.month, this.model.year)
   + ' ' + this.i18n.getYearNumerals(this.hebrewModel.year);
 }
 

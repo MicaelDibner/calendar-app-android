@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "~9.1.6",
     "@angular/router": "~9.1.6",
     "@iconfu/svg-inject": "^1.2.3",
+    "@ionic-native/app-minimize": "^5.27.0",
     "@ionic-native/core": "^5.0.7",
     "@ionic-native/date-picker": "^5.26.0",
     "@ionic-native/file": "^5.26.0",
@@ -37,6 +38,7 @@
     "cordova": "^9.0.0",
     "cordova-android": "^8.1.0",
     "cordova-browser": "^5.0.4",
+    "cordova-plugin-appminimize": "^1.0.1",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-datepicker": "^0.9.3",
     "cordova-plugin-device": "2.0.2",
@@ -107,7 +109,8 @@
       "cordova-plugin-local-notification": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-nativestorage": {},
-      "cordova-plugin-file": {}
+      "cordova-plugin-file": {},
+      "cordova-plugin-appminimize": {}
     },
     "platforms": [
       "android",

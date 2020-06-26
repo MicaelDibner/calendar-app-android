@@ -31,8 +31,13 @@
 </ng-template>
 </div>
 
+<div *ngIf="this.openMenu; else navButtons">
+  <app-navigation-bar></app-navigation-bar>
+</div>
+
+<ng-template #navButtons>
 <div class="info">
     <marquee behavior="scroll" direction="left">{{this.getEventsData()}}</marquee>
     <div class="dateInfo">{{this.getGeorgianDate()}}</div>
 </div>
-<app-navigation-buttons leftbutton="copy-outline" rightbutton="settings-outline"></app-navigation-buttons>
+</ng-template>

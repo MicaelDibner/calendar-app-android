@@ -288,7 +288,7 @@ on0() {
 
   getHebrewDate(): string {
     const hebrewModel = this.convertHebrewModel(this.model);
-    return this.i18n.getDayNumerals(hebrewModel) + ' ' + this.i18n.getMonthShortName(hebrewModel.month)
+    return this.i18n.getDayNumerals(hebrewModel) + ' ' + this.i18n.getMonthFullName(this.model.month, this.model.year)
     + ' ' + this.i18n.getYearNumerals(hebrewModel.year);
   }
 

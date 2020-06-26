@@ -1,7 +1,8 @@
 <ion-content #content>
     <div class="screen" #screen [class.hebrewText]="this.translate.currentLang === 'he'">
 <h6>{{this.time}}</h6> 
-<h6>{{ 'MOLAD_CHALAKIM' | translate }}</h6> 
+<h6>{{ 'MOLAD_CHALAKIM' | translate }}</h6>
+{{'Molad date: ' + (this.molad | date:'HH:mm:ss')}}
 {{'Molad chalakim: ' + this.chalakim}} <br>
 {{'Molad chalakim tohu: ' + this.chalakimTohu}} 
 <hr>
@@ -11,8 +12,8 @@
 <hr>
 <h6>{{ 'TALMUD_BAVLI' | translate }}</h6>
 {{this.masechta}} <br>
-{{this.masechtapage}} <br>
-{{this.masechtanumber}} <br>
+{{hebrewNumerals(this.masechtapage)}} <br>
+{{hebrewNumerals(this.masechtanumber)}} <br>
 <hr>
 <h6>{{ 'TALMUD_YERUSHALMI' | translate }}</h6> 
 {{this.masechtajrs}} <br>

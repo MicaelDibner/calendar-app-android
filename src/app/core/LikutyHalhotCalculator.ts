@@ -54,7 +54,7 @@ export class LikutyHalhotCalculator {
     const date: DateTime = calendar.getDate();
     const julianDay: number = this.getJulianDay(date);
     let cycleNo: number = 0;
-    cycleNo = 1 + ((julianDay - LikutyHalhotCalculator.likutyHalhotStartDay) % 1925);
+    cycleNo = 1 + ((julianDay - LikutyHalhotCalculator.likutyHalhotStartDay) % 1924);
 
     // /* Fix Shekalim for old cycles. */
     // if (cycleNo <= 7) {

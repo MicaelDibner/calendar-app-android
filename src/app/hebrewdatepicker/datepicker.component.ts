@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild, OnInit, AfterViewInit, Renderer2, SimpleChange} from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, Renderer2} from '@angular/core';
 import {
   NgbCalendar,
   NgbCalendarHebrew, NgbDate,
@@ -10,15 +10,14 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { CustomKeyboardService } from '../core/services/custom-keyboard.service';
-import {IDates} from '../core/model/IDates';
+import { IDates } from '../core/model/IDates';
 import { EventsService } from '../core/services/events.service';
 import { JewishCalendar } from 'kosher-zmanim';
 import { Parsha } from 'kosher-zmanim';
-import { DatePipe, Location } from '@angular/common';
-import { NavController } from '@ionic/angular';
+import { DatePipe } from '@angular/common';
+import { NavController, Platform } from '@ionic/angular';
 import { IDayInfoModel } from '../core/model/IDayInfoModel';
-import { NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap/datepicker/adapters/ngb-date-adapter';
-import { async } from '@angular/core/testing';
+import { NgbCalendarHebrewSpecial } from './NgbCalendarHebrewSpecial';
 
 const hagim = {
   0: 'EREV_PESACH',
@@ -65,7 +64,7 @@ const hagim = {
   styleUrls: ['./datepicker.component.css'],
   providers: [
     DatePipe,
-    {provide: NgbCalendar, useClass: NgbCalendarHebrew},
+    {provide: NgbCalendar, useClass: NgbCalendarHebrewSpecial},
     {provide: NgbDatepickerI18n, useClass: NgbDatepickerI18nHebrew},
     {provide: NgbDatepickerKeyboardService, useClass: CustomKeyboardService},
   ]
@@ -91,6 +90,9 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   private buttonMenuHandler;
   private buttonRHandler;
   private buttonQHandler;
+  private buttonDownKeyUpHandler;
+  countPress=0;
+  openMenu: boolean = false;
 
 
 
@@ -137,15 +139,29 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.buttonUpHandler  = this.renderer.listen('window', 'keydown.arrowup', () => this.onUp());
     this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
     this.buttonDownHandler = this.renderer.listen('window', 'keydown.arrowdown', () => this.onDown());
+    this.buttonDownKeyUpHandler = this.renderer.listen('window', 'keyup.arrowdown', () => this.onDownUp());
     this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
     this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
-    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onMenu());
-    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
+    this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onBack());
+    this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onMenu());
     this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
     this.datepicker.focusDate(this.model);
     this.datepicker.focusSelect();
     this.datepicker.focus();
+  }
+  onDownUp(): boolean | void {
+    if(this.countPress <= 20){
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+    (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
+    this.datepicker.focusSelect();
+    } else {
+      console.log('arrow down keyup');
+      this.openMenu = !this.openMenu;
+      this.countPress = 0;
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
+    }
   }
 
 /**
@@ -167,9 +183,10 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.buttonMenuHandler();
     this.buttonRHandler();
     this.buttonQHandler();
+    this.buttonDownKeyUpHandler();
   }
 
-// button ArrowUp handler
+// button ArrowLeft handler
 
   onLeft() {
     this.datepicker.focusDate(this.datepicker.calendar.getNext(this.datepicker.state.focusedDate, 'd', 1));
@@ -194,9 +211,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
 // button ArrowDown handler
 
   onDown() {
-    this.datepicker.focusDate(this.datepicker.calendar.getNext
-      (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
-    this.datepicker.focusSelect();
+    this.countPress++;
   }
 
   // button 6 handler
@@ -210,17 +225,24 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
 // button 4 handler
 
   on4() {
+    console.log(this.model);
+    console.log(this.datepicker.state.focusedDate);
     this.datepicker.focusDate(this.datepicker.calendar.getPrev
       (this.datepicker.state.focusedDate, 'm', 1));
     this.datepicker.focusSelect();
+    console.log(this.model);
+    console.log(this.datepicker.state.focusedDate);
   }
 
 // button 2 handler
 
   on2() {
+    console.log(this.model);
     this.datepicker.focusDate(this.datepicker.calendar.getPrev
       (this.datepicker.state.focusedDate, 'y', 1));
     this.datepicker.focusSelect();
+    console.log(this.model);
+    console.log(this.datepicker.state.focusedDate);
   }
 
 // button 0 handler
@@ -243,13 +265,12 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   }
 
   onBack() {
-    console.log('menu pressed');
-    this.navCtrl.navigateForward('basicdatepicker');
-    this.emitDate(this.model);
+    console.log('back pressed');
+    window['plugins'].appMinimize.minimize();
   }
 
   onMenu() {
-    console.log('back pressed');
+    console.log('menu pressed');
     this.navCtrl.navigateForward('menu');
   }
 /**
@@ -285,7 +306,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
       isYomShishi: this.isFriday(this.jewishCalendar.getDayOfWeek()),
       isShabbat: this.isSaturday(this.jewishCalendar.getDayOfWeek()),
       molad: this.jewishCalendar.getMoladAsDate().ts,
-      candleLighting: this.jewishCalendar.hasCandleLighting()
+      candleLighting: this.jewishCalendar.hasCandleLighting(),
     };
   }
 
@@ -367,7 +388,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
  */
 
   getHebrewDate(): string {
-    return this.i18n.getDayNumerals(this.model) + ' ' + this.i18n.getMonthShortName(this.model.month)
+    return this.i18n.getDayNumerals(this.model) + ' ' + this.i18n.getMonthFullName(this.model.month, this.model.year)
     + ' ' + this.i18n.getYearNumerals(this.model.year);
   }
 /**
