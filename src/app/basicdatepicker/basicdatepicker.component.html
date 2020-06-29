@@ -30,7 +30,7 @@
   </ng-template>
 </div>
 <div *ngIf="this.openMenu; else navButtons">
-  <app-navigation-bar (emitMenuClose)="closeNavigationBar($event)" [currentItem]="'hebrewdatepicker'"></app-navigation-bar>
+  <app-navigation-bar (emitMenuClose)="closeNavigationBar($event)" [currentItem]="'basicdatepicker'"></app-navigation-bar>
 </div>
 
 <ng-template #navButtons>

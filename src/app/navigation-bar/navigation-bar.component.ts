@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Renderer2, ViewChild, Input, ElementRef, ViewChildren, QueryList, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2, ViewChild, Input, ElementRef, ViewChildren, QueryList, Output, EventEmitter, AfterContentInit, AfterContentChecked, AfterViewInit } from '@angular/core';
 import { IonTabs, IonTabBar, NavController } from '@ionic/angular';
 
 @Component({
@@ -6,7 +6,7 @@ import { IonTabs, IonTabBar, NavController } from '@ionic/angular';
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.scss'],
 })
-export class NavigationBarComponent implements OnInit, OnDestroy, AfterContentInit{
+export class NavigationBarComponent implements OnInit, OnDestroy, AfterViewInit{
   private buttonLeftHandler;
   private buttonRightHandler;
   private buttonEnterHandler;
@@ -22,9 +22,12 @@ export class NavigationBarComponent implements OnInit, OnDestroy, AfterContentIn
 
   constructor( private renderer: Renderer2, public navCtrl: NavController) {
   }
-  ngAfterContentInit(): void {
-    this.components.toArray()[this.routeNumber].nativeElement.style.backgroundColor = '#5789D8';
-  }
+  ngAfterViewInit(): void {
+    this.selectedButton = this.components.toArray()[this.routeNumber];
+    console.log(this.selectedButton);
+    this.renderer.setAttribute(this.selectedButton.nativeElement, 'class', 'selectedButton');
+    // this.selectedButton.nativeElement.style.backgroundColor = '#5789D8';
+  } 
 
   ngOnInit() {
     console.log('component come');
@@ -46,29 +49,32 @@ export class NavigationBarComponent implements OnInit, OnDestroy, AfterContentIn
   // button ArrowLeft handler
 
   onLeft() {
-    console.log(this.routeNumber);
-    this.components.toArray()[this.routeNumber].nativeElement.style.backgroundColor = '#fff';
+    this.renderer.setAttribute(this.selectedButton.nativeElement, 'class', 'button');
     if (this.routeNumber === 0) {this.routeNumber = 5; } else { this.routeNumber--; }
     console.log(this.components.toArray()[this.routeNumber].nativeElement['attributes'][1]['value']);
-    this.components.toArray()[this.routeNumber].nativeElement.style.backgroundColor = '#5789D8';
+    this.selectedButton = this.components.toArray()[this.routeNumber];
+    this.renderer.setAttribute(this.selectedButton.nativeElement, 'class', 'selectedButton');
     this.countOpen = 0;
   }
 
 // button ArrowRight handler
 
   onRight() {
-    this.components.toArray()[this.routeNumber].nativeElement.style.backgroundColor = '#fff';
+    this.renderer.setAttribute(this.selectedButton.nativeElement, 'class', 'button');
     if (this.routeNumber === 5) {this.routeNumber = 0; } else { this.routeNumber++; }
     console.log(this.components.toArray()[this.routeNumber].nativeElement['attributes'][1]['value']);
-    this.components.toArray()[this.routeNumber].nativeElement.style.backgroundColor = '#5789D8';
+    this.selectedButton = this.components.toArray()[this.routeNumber];
+    this.renderer.setAttribute(this.selectedButton.nativeElement, 'class', 'selectedButton');
     this.countOpen = 0;
   }
 
   onEnter() {
+    this.emitMenuClose.emit(true);
     this.navCtrl.navigateForward(this.components.toArray()[this.routeNumber].nativeElement['attributes'][1]['value']);
     this.buttonRightHandler();
     this.buttonLeftHandler();
     this.buttonEnterHandler();
+    console.log('nav enter navbar pressed');
   }
 
   countMenuOpen() {

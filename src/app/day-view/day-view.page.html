@@ -324,4 +324,10 @@
 <button type="button" class="btn btn-primary" autofocus  (keydown.enter)="closeDayView()">Close</button>
 </div>
 </ion-content>
-<app-navigation-buttons rightbutton="arrow-undo"></app-navigation-buttons>
+<div *ngIf="this.openMenu; else navButtons">
+  <app-navigation-bar (emitMenuClose)="closeNavigationBar($event)" [currentItem]="'hebrewdatepicker'"></app-navigation-bar>
+</div>
+
+<ng-template #navButtons>
+  <app-navigation-buttons rightbutton="arrow-undo"></app-navigation-buttons>
+</ng-template>

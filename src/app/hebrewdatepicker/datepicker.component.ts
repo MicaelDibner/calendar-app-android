@@ -81,6 +81,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   // handlers for Renderer2
   private button4Handler;
   private button6Handler;
+  private button5Handler;
   private button2Handler;
   private button0Handler;
   private buttonUpHandler;
@@ -92,7 +93,6 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
   private buttonMenuHandler;
   private buttonRHandler;
   private buttonQHandler;
-  private buttonDownKeyUpHandler;
   countPress=0;
   openMenu: boolean = false;
 
@@ -138,10 +138,10 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.button6Handler = this.renderer.listen('document', 'keydown.6', () => this.on6());
     this.button2Handler = this.renderer.listen('document', 'keydown.2', () => this.on2());
     this.button0Handler = this.renderer.listen('document', 'keydown.0', () => this.on0());
+    this.button5Handler = this.renderer.listen('document', 'keydown.5', () => this.on5());
     this.buttonUpHandler  = this.renderer.listen('window', 'keydown.arrowup', () => this.onUp());
     this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
     this.buttonDownHandler = this.renderer.listen('window', 'keydown.arrowdown', () => this.onDown());
-    this.buttonDownKeyUpHandler = this.renderer.listen('window', 'keyup.arrowdown', () => this.onDownUp());
     this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
     this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
     this.buttonBackHandler = this.renderer.listen('document', 'backbutton', () => this.onBack());
@@ -153,29 +153,13 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.datepicker.focus();
   }
   onDownUp(): boolean | void {
-    if(this.countPress <= 15){
-    this.datepicker.focusDate(this.datepicker.calendar.getNext
-    (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
-    this.datepicker.focusSelect();
-    this.countPress = 0;
-    } else {
-      this.countPress = 0;
-      if (!this.openMenu) {
-      this.buttonRightHandler();
-      this.buttonLeftHandler();
-      this.buttonEnterHandler();
-      this.openMenu = true;
-      } else {
-        this.openMenu = false;
-        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
-        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
-        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
-      }
-    }
   }
 
   closeNavigationBar(event: boolean) {
     if(event === true) this.openMenu = !this.openMenu;
+    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
   }
 
 /**
@@ -186,6 +170,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.emitDate(this.model);
     this.button4Handler();
     this.button6Handler();
+    this.button5Handler();
     this.button2Handler();
     this.button0Handler();
     this.buttonUpHandler();
@@ -197,8 +182,8 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.buttonMenuHandler();
     this.buttonRHandler();
     this.buttonQHandler();
-    this.buttonDownKeyUpHandler();
     this.openMenu = false;
+    console.log('listeners cleared');
   }
 
 // button ArrowLeft handler
@@ -226,7 +211,23 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
 // button ArrowDown handler
 
   onDown() {
-    this.countPress++;
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+      (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
+    this.datepicker.focusSelect();
+  }
+
+  on5() {
+    if (!this.openMenu) {
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
+      this.buttonEnterHandler();
+      this.openMenu = true;
+      } else {
+        this.openMenu = false;
+        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+      }
   }
 
   // button 6 handler
@@ -277,6 +278,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     const dayData = this.dayTemplateData(modelNgbDate) as IDayInfoModel;
     this.selectedDateServise.selectedDateDayInfoSubscribtion.next(dayData);
     this.navCtrl.navigateForward('day-view');
+    console.log('nav enter datepicker pressed');
   }
 
   onBack() {

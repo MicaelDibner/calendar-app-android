@@ -161,6 +161,12 @@ export class DayViewPage implements OnInit {
   private buttonMenuHandler;
   private buttonRHandler;
   private buttonQHandler;
+  private buttonRightHandler;
+  private buttonLeftHandler;
+  private buttonEnterHandler;
+  private button5Handler;
+
+  openMenu: boolean = false;
 
   constructor(private selectedDateServise: SelectedDateService,
               private storageService: StorageService,
@@ -201,6 +207,10 @@ export class DayViewPage implements OnInit {
     this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
     this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+    this.button5Handler = this.renderer.listen('document', 'keydown.5', () => this.on5());
   }
 
   ionViewWillLeave(): void{
@@ -209,13 +219,50 @@ export class DayViewPage implements OnInit {
     this.buttonMenuHandler();
     this.buttonRHandler();
     this.buttonQHandler();
+    this.buttonRightHandler();
+    this.buttonLeftHandler();
+    this.buttonEnterHandler();
+    this.button5Handler();
+  }
+
+  closeNavigationBar(event: boolean) {
+    if(event === true) this.openMenu = !this.openMenu;
+    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
   }
 
   onMenu() {
+    this.navCntrl.pop();
   }
 
   onBack() {
     this.navCntrl.navigateForward('menu');
+  }
+
+  on5() {
+    if (!this.openMenu) {
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
+      this.buttonEnterHandler();
+      this.openMenu = true;
+      } else {
+        this.openMenu = false;
+        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+      }
+  }
+
+  onLeft() {
+  }
+  
+  // button ArrowRight handler
+  
+  onRight() {
+  }
+
+  onEnter() {
   }
 
 /**

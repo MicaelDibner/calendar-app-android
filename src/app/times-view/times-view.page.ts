@@ -38,6 +38,9 @@ export class TimesViewPage implements OnInit {
   private buttonDownHandler;
   private buttonRightHandler;
   private buttonLeftHandler;
+  private buttonEnterHandler;
+  private button5Handler;
+  openMenu: boolean = false;
 
   constructor(private navCntrl: NavController, private renderer: Renderer2,
               private selectedDateServise: SelectedDateService, public translate: TranslateService,
@@ -61,7 +64,34 @@ export class TimesViewPage implements OnInit {
     this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
     this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
     this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+    this.button5Handler = this.renderer.listen('document', 'keydown.5', () => this.on5());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
   }
+
+  on5() {
+    if (!this.openMenu) {
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
+      this.buttonEnterHandler();
+      this.openMenu = true;
+      } else {
+        this.openMenu = false;
+        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+      }
+    }
+
+  onEnter() {
+    console.log('times view enter pressed');
+  }
+
+  closeNavigationBar(event: boolean) {
+    if(event === true) this.openMenu = !this.openMenu;
+    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+    this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+}
 
   onLeft(): boolean | void {
     const ngbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
@@ -84,6 +114,8 @@ export class TimesViewPage implements OnInit {
     this.buttonDownHandler();
     this.buttonRightHandler();
     this.buttonLeftHandler();
+    this.buttonEnterHandler();
+    this.button5Handler();
   }
 
   onMenu() {

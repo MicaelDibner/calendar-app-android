@@ -9,6 +9,7 @@ import { TimesViewPageRoutingModule } from './times-view-routing.module';
 import { TimesViewPage } from './times-view.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
+import { NavigationBarModule } from '../navigation-bar/navigation-bar.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { NavigationButtonsModule } from '../navigation-buttons/navigation-button
     IonicModule,
     TimesViewPageRoutingModule,
     TranslateModule.forChild(),
-    NavigationButtonsModule
+    NavigationBarModule
   ],
   declarations: [TimesViewPage]
 })

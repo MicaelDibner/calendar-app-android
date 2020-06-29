@@ -113,4 +113,6 @@
   </div>
 </div>
 </ion-content>
-<app-navigation-buttons leftbutton="copy-outline" rightbutton="settings-outline"></app-navigation-buttons>
+<div *ngIf="this.openMenu;">
+  <app-navigation-bar (emitMenuClose)="closeNavigationBar($event)" [currentItem]="'times-view'"></app-navigation-bar>
+</div>
