@@ -73,7 +73,10 @@ export class BasicdatepickerComponent implements OnInit {
   private buttonMenuHandler;
   private buttonRHandler;
   private buttonQHandler;
+  private buttonDownKeyUpHandler;
   jewishCalendar = new JewishCalendar();
+  countPress = 0;
+  openMenu: boolean = false;
 
   constructor(private calendar: NgbCalendar, private selectedDateServise: SelectedDateService,
               public i18n: NgbDatepickerI18nHebrew, private hebrewCalendar: NgbCalendarHebrew,
@@ -89,7 +92,7 @@ export class BasicdatepickerComponent implements OnInit {
     this.model = new NgbDate(this.dates.georgianDate.year, this.dates.georgianDate.month,
         this.dates.georgianDate.day);
     this.hebrewDateModel = this.dates.hebrewDate;
-}
+    }
 
   ionViewWillEnter(): void{
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
@@ -111,6 +114,7 @@ export class BasicdatepickerComponent implements OnInit {
     this.buttonMenuHandler = this.renderer.listen('document', 'menubutton', () => this.onBack());
     this.buttonRHandler = this.renderer.listen('document', 'keydown.r', () => this.onMenu());
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
+    this.buttonDownKeyUpHandler = this.renderer.listen('window', 'keyup.arrowdown', () => this.onDownUp());
 
   }
 
@@ -130,6 +134,34 @@ export class BasicdatepickerComponent implements OnInit {
     this.buttonMenuHandler();
     this.buttonRHandler();
     this.buttonQHandler();
+    this.buttonDownKeyUpHandler();
+    this.openMenu = false;
+  }
+
+  onDownUp(): boolean | void {
+    if(this.countPress <= 15){
+    this.datepicker.focusDate(this.datepicker.calendar.getNext
+    (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
+    this.datepicker.focusSelect();
+    this.countPress = 0;
+    } else {
+      this.countPress = 0;
+      if (!this.openMenu) {
+      this.buttonRightHandler();
+      this.buttonLeftHandler();
+      this.buttonEnterHandler();
+      this.openMenu = true;
+      } else {
+        this.openMenu = false;
+        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+      }
+    }
+  }
+
+  closeNavigationBar(event: boolean) {
+    if(event === true) this.openMenu = !this.openMenu;
   }
 
 // button ArrowUp handler
@@ -158,9 +190,7 @@ onUp() {
 // button ArrowDown handler
 
 onDown() {
-  this.datepicker.focusDate(this.datepicker.calendar.getNext
-    (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
-  this.datepicker.focusSelect();
+  this.countPress++;
 }
 
 // button 6 handler
@@ -217,6 +247,7 @@ on0() {
 
   dayTemplateData(date: NgbDate) {
     this.jewishCalendar.setGregorianDate(date.year, date.month - 1, date.day);
+    console.log(date);
     return {
       gregorian: date,
       yomtov: this.jewishCalendar.isYomTovAssurBemelacha(),

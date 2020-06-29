@@ -1,4 +1,25 @@
-ion-segment-button{
-    max-width: 16.6% !important;
-    max-width: 15% !important;
+
+.navMenu{
+    display: flex;
+    flex-direction: row ;
+    justify-content: space-between;
+    padding: 0.2rem;
+}
+.selected{
+    background-color: blue;
+}
+
+.button {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 0.2rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    height: 1.5rem;
+    width: 1.5rem;
+    padding-top: 12%;
+    padding-left: 12%;
 }

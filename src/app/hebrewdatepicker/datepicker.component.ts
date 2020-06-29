@@ -18,6 +18,7 @@ import { DatePipe } from '@angular/common';
 import { NavController, Platform } from '@ionic/angular';
 import { IDayInfoModel } from '../core/model/IDayInfoModel';
 import { NgbCalendarHebrewSpecial } from './NgbCalendarHebrewSpecial';
+import { DayTemplateContext } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-day-template-context';
 
 const hagim = {
   0: 'EREV_PESACH',
@@ -71,6 +72,7 @@ const hagim = {
 })
 export class DatepickerComponent implements OnInit, AfterViewInit {
   @ViewChild('dp') datepicker: NgbDatepicker;
+  @ViewChild('dt') dayTemplate: DayTemplateContext;
 
   model: NgbDateStruct;
   gregorianModel: NgbDateStruct;
@@ -151,17 +153,29 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.datepicker.focus();
   }
   onDownUp(): boolean | void {
-    if(this.countPress <= 20){
+    if(this.countPress <= 15){
     this.datepicker.focusDate(this.datepicker.calendar.getNext
     (this.datepicker.state.focusedDate, 'd', this.datepicker.calendar.getDaysPerWeek()));
     this.datepicker.focusSelect();
+    this.countPress = 0;
     } else {
-      console.log('arrow down keyup');
-      this.openMenu = !this.openMenu;
       this.countPress = 0;
+      if (!this.openMenu) {
       this.buttonRightHandler();
       this.buttonLeftHandler();
+      this.buttonEnterHandler();
+      this.openMenu = true;
+      } else {
+        this.openMenu = false;
+        this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
+        this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
+        this.buttonEnterHandler = this.renderer.listen('window', 'keydown.enter', () => this.onEnter());
+      }
     }
+  }
+
+  closeNavigationBar(event: boolean) {
+    if(event === true) this.openMenu = !this.openMenu;
   }
 
 /**
@@ -184,6 +198,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     this.buttonRHandler();
     this.buttonQHandler();
     this.buttonDownKeyUpHandler();
+    this.openMenu = false;
   }
 
 // button ArrowLeft handler
@@ -342,7 +357,7 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
     let holyday = '';
     let events = '';
     let parasha = '';
-    let molad = '';
+    let molad = ''; 
     const modelNgbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
     if (this.dayTemplateData(modelNgbDate).holyday) {
       const hlNumber = this.dayTemplateData(modelNgbDate).holydayNumber;
@@ -424,6 +439,11 @@ export class DatepickerComponent implements OnInit, AfterViewInit {
       .toGregorian(modelNgbDate);
     return data;
   }
+
+  // async getEventsNumberForDay(date: NgbDate) {
+  //   console.log(date);
+  //   await this.eventsService.getEventCalendarView(date.year + '-' + date.month + '-' + date.day);
+  // }
 
 /**
  * Method emit hebrew and gregorian models to SelectedDateServise

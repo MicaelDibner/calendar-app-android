@@ -12,7 +12,7 @@
 </ngb-datepicker>
 
 <ng-template #dt let-date let-today="today" let-data="data" let-selected="selected" let-currentMonth="currentMonth">
-  <div class="hebrew-day" [class.friday]="(data['isYomShishi'])" [class.saturday]="(data['isShabbat'])" 
+  <div class="hebrew-day" [class.friday]="data.isYomShishi" [class.saturday]="data.isShabbat" 
   [class.outside]="date.month !== currentMonth" [class.selected]="selected"
   [class.yomTov]="(data['yomtov'])" [class.today]="today" [class.holyday]="(data['holyday'])" 
   [class.roshhodesh]="(data['roshhodesh'])" [class.taanis]="(data['taanis'])" 
@@ -23,16 +23,16 @@
       {{data['omer']}}</span> {{ data.gregorian.day + '/' + (data.gregorian.month) }}</div>
   <div class="hebrew-num"> <span *ngIf="data['shabbatMevorachim']" class="holydayNumber" [class.outside]="date.month !== currentMonth">M</span>
     <span *ngIf="data['kidushLevana']" class="holydayNumber" [class.outside]="date.month !== currentMonth">KL</span>{{ i18n.getDayNumerals(date) }}</div>
-  <!-- <div class="event">
-    <span *ngIf="data['events']">{{'E:' + data['events']}}</span>
-    <span *ngIf="data['notifications']">{{'N:' + data['notifications']}}</span>
-  </div> -->
+  <div class="event">
+    <!-- <span>{{this.getEventsNumberForDay(data.gregorian) | async}}</span> -->
+    <!-- <span *ngIf="data['notifications']">{{'N:' + data['notifications']}}</span> -->
+  </div>
   </div>
 </ng-template>
 </div>
 
 <div *ngIf="this.openMenu; else navButtons">
-  <app-navigation-bar></app-navigation-bar>
+  <app-navigation-bar (emitMenuClose)="closeNavigationBar($event)" [currentItem]="'hebrewdatepicker'"></app-navigation-bar>
 </div>
 
 <ng-template #navButtons>
