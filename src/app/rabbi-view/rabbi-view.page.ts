@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, Renderer2, ElementRef, ViewChild } from '@angular/core';
 import { IDates } from '../core/model/IDates';
-import { NgbDateStruct, NgbDatepickerI18nHebrew, NgbDatepickerI18n, NgbDate, NgbCalendarHebrew, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbDatepickerI18nHebrew, NgbDatepickerI18n } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { RabbyJSON } from '../core/model/RabbyJSON';
@@ -16,7 +16,6 @@ import { NavController, IonContent } from '@ionic/angular';
   styleUrls: ['./rabbi-view.page.scss'],
   providers: [
     {provide: NgbDatepickerI18n, useClass: NgbDatepickerI18nHebrew},
-    {provide: NgbCalendar, useClass: NgbCalendarHebrew},
   ]
 })
 export class RabbiViewPage implements OnInit {
@@ -36,12 +35,9 @@ export class RabbiViewPage implements OnInit {
   private buttonQHandler;
   private buttonUpHandler;
   private buttonDownHandler;
-  private buttonRightHandler;
-  private buttonLeftHandler;
 
   constructor(private navCntrl: NavController, private renderer: Renderer2
-            , private selectedDateServise: SelectedDateService, public i18n: NgbDatepickerI18n,
-              public hebrewCalendar: NgbCalendar) { }
+            , private selectedDateServise: SelectedDateService, public i18n: NgbDatepickerI18n) { }
 
   ngOnInit() {
     this.getDataString();
@@ -56,20 +52,6 @@ export class RabbiViewPage implements OnInit {
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
     this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
     this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
-    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
-    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
-  }
-  onLeft(): boolean | void {
-    const ngbDate = new NgbDate(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
-    this.hebrewModel = (this.hebrewCalendar as NgbCalendarHebrew).getPrev(ngbDate, 'd', 1);
-    this.date = '' + this.hebrewModel.month + '-' + this.hebrewModel.day;
-    this.getRabbyInfo();
-  }
-  onRight(): boolean | void {
-    const ngbDate = new NgbDate(this.hebrewModel.year, this.hebrewModel.month, this.hebrewModel.day);
-    this.hebrewModel = (this.hebrewCalendar as NgbCalendarHebrew).getNext(ngbDate, 'd', 1);
-    this.date = '' + this.hebrewModel.month + '-' + this.hebrewModel.day;
-    this.getRabbyInfo();
   }
 
 
@@ -80,8 +62,6 @@ export class RabbiViewPage implements OnInit {
     this.buttonQHandler();
     this.buttonUpHandler();
     this.buttonDownHandler();
-    this.buttonRightHandler();
-    this.buttonLeftHandler();
   }
 
   onMenu() {
@@ -102,6 +82,7 @@ export class RabbiViewPage implements OnInit {
     event.preventDefault();
     if (this.scroll <= this.contentDiv.nativeElement.scrollHeight - 395) {this.scroll = this.scroll + 100; }
     this.content.scrollToPoint(0, this.scroll);
+    console.log(this.scroll);
   }
 
 

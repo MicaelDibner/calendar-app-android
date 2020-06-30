@@ -7,15 +7,13 @@ import { IonicModule } from '@ionic/angular';
 import { TodayTimesViewPageRoutingModule } from './today-times-view-routing.module';
 
 import { TodayTimesViewPage } from './today-times-view.page';
-import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TodayTimesViewPageRoutingModule,
-    NavigationButtonsModule
+    TodayTimesViewPageRoutingModule
   ],
   declarations: [TodayTimesViewPage]
 })

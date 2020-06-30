@@ -608,7 +608,7 @@ export class DayViewPage implements OnInit {
  */
 
   getUserEvents() {
-    if (this.events !== undefined) {
+    if (this.events !== undefined && this.dayInfo.events) {
       this.userEvents = new Array();
       this.events.forEach(value => {
         if (value.isUserEvent === true) {
@@ -675,6 +675,6 @@ export class DayViewPage implements OnInit {
  * Method close view
  */
   closeDayView(){
-    this.navCntrl.back();
+    this.navCntrl.pop();
   }
 }

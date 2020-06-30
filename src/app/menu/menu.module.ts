@@ -15,9 +15,9 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SettingsComponent } from './settings/settings.component';
+import { BrowserModule } from '@angular/platform-browser';
 import { GeolocationComponent } from './geolocation/geolocation.component';
 import { SetGeolocationComponent } from './set-geolocation/set-geolocation.component';
-import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 
 @NgModule({
@@ -29,9 +29,8 @@ import { NavigationButtonsModule } from '../navigation-buttons/navigation-button
     NgbModule,
     ReactiveFormsModule,
     TranslateModule.forChild(),
-    NavigationButtonsModule
   ],
-  declarations: [MenuPage, CreateEventComponent, CreateNotificationComponent, SettingsComponent,
+  declarations: [MenuPage, CreateEventComponent, CreateNotificationComponent, SettingsComponent, 
     GeolocationComponent, SetGeolocationComponent],
   exports: [CreateNotificationComponent]
 })

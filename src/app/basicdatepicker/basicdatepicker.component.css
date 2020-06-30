@@ -1,15 +1,11 @@
-.gregorian-day {
-  text-align: right;
-  padding: 0.1rem 0.2rem 0.1rem 0.1rem;
+.hebrew-day {
+  text-align: center;
+  padding: 0.25rem 0.65rem 0.25rem 0.25rem;
+  padding-right: 0.25rem;
   border-radius: 0.25rem;
-  display: inline-block !important;
-  min-height: 3rem !important;
+  display: inline-block;
+  min-height: 100% !important;
   min-width: 100% !important;
-}
-.today{
-  background-color: yellow !important;
-  z-index: 1;
-  border-radius: 0.25rem;
 }
 .friday{
   background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 70%, rgba(236,199,147,1) 30%, rgba(236,199,147,1) 100%);
@@ -19,122 +15,50 @@
   background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 70%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 100%);
   border-radius: 0.25rem;
 }
-.yomTov{
-  background:  rgba(236,199,147,1);
-  border-radius: 0.25rem;
-}
-.roshhodesh{
-  background:  rgb(236, 147, 147);
-  border-radius: 0.25rem;
-}
-.roshhodesh.friday{
-  background: linear-gradient(90deg, rgb(236, 147, 147) 0%, rgb(236, 147, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
-  border-radius: 0.25rem;
-}
-.roshhodesh.saturday{
-  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(236, 147, 147) 30%, rgb(236, 147, 147) 100%);
-  border-radius: 0.25rem;
-}
-.holyday.friday{
-  background: linear-gradient(90deg, rgb(183, 236, 147) 0%, rgb(183, 236, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
-  border-radius: 0.25rem;
-}
-.holyday.saturday{
-  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(183, 236, 147) 30%, rgb(183, 236, 147) 100%);
-  border-radius: 0.25rem;
-}
-.omer{
-  background:  rgb(147, 196, 236);
-  border-radius: 0.25rem;
-}
-.omer.friday{
-  background: linear-gradient(90deg, rgb(147, 196, 236) 0%, rgb(147, 196, 236) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
-  border-radius: 0.25rem;
-}
-.omer.saturday{
-  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(147, 196, 236) 30%, rgb(147, 196, 236) 100%);
-  border-radius: 0.25rem;
-}
-.omer.yomTov{
-  background:  rgba(236,199,147,1);
-  border-radius: 0.25rem;
-}
-.omer.holyday{
-  background:  rgb(183, 236, 147);
-  border-radius: 0.25rem;
-}
-.chanukah{
-  background:  rgb(183, 236, 147);
-  border-radius: 0.25rem;
-}
-.chanukah.friday{
-  background: linear-gradient(90deg, rgb(183, 236, 147) 0%, rgb(183, 236, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
-  border-radius: 0.25rem;
-}
-.chanukah.saturday{
-  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(183, 236, 147) 30%, rgb(183, 236, 147) 100%);
-  border-radius: 0.25rem;
-}
-.chanukah.yomTov{
-  background:  rgba(236,199,147,1);
-  border-radius: 0.25rem;
-}
-.chanukah.holyday{
-  background:  rgb(183, 236, 147);
-  border-radius: 0.25rem;
-}
-.yomTov.holyday{
-  background:  rgba(236,199,147,1);
-  border-radius: 0.25rem;
-}
-.holyday{
-  background:  rgb(183, 236, 147);
-  border-radius: 0.25rem;
-}
-.taanis {
-  background:  rgb(160, 160, 160);
-  border-radius: 0.25rem;
-}
-.yomTov.taanis {
-  background: linear-gradient(90deg, rgb(160, 160, 160) 0%, rgb(160, 160, 160) 50%, rgb(236,199,147) 50%, rgb(236,199,147) 100%);
-  border-radius: 0.25rem;
-}
 
-.event{
-  background:  rgb(147, 181, 236);
-  border-radius: 0.25rem;
-  font-size: 0.6rem;
+.hebrew-day:hover, .hebrew-day.focused {
+  background-color: #e6e6e6;
 }
-.holydayNumber{
-  background:  rgb(55, 91, 149);
-  color: white;
-  font-size: 0.6rem;
-  border-radius: 0.3rem;
-  padding: 0.05rem;
-}
-
-.gregorian-day.selected {
-  background: #007bff;
-  color: white;
-  z-index: 1;
-}
-.gregorian-day.selected.today {
-  background: #007bff !important;
+.hebrew-day.selected {
+  background: #007bff;;
   color: white;
   z-index: 1;
 }
 
-.outside {
-  color: lightgray;
+/* OUTER CONTAINER */
+.tcontainer {
+  width: 100%;
+  overflow: hidden; /* Hide scroll bar */
 }
-.outside.holydayNumber{
-  background:lightgrey;
-  color: white;
-  font-size: 0.6rem;
-  border-radius: 0.3rem;
-  padding: 0.1rem;
+
+/* MIDDLE CONTAINER */
+.ticker-wrap {
+  width: 100%;
+  padding-left: 100%; /* Push contents to right side of screen */
+  background-color: #eee;
 }
-.gregorian-num {
-  font-size: 0.6rem;
-  direction: ltr;
+
+/* INNER CONTAINER */
+@keyframes ticker {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-100%, 0, 0); }
+}
+.ticker-move {
+  /* Basically move items from right side of screen to left in infinite loop */
+  display: inline-block;
+  white-space: nowrap;
+  padding-right: 100%;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-name: ticker;
+  animation-duration: 10s;
+}
+.ticker-move:hover{
+  animation-play-state: paused; /* Pause scroll on mouse hover */
+}
+
+/* ITEMS */
+.ticker-item{
+  display: inline-block; /* Lay items in a horizontal line */
+  padding: 0 2rem;
 }

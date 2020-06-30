@@ -36,15 +36,15 @@
 {{DersoMosharNameJSON[this.dersoMoshar]}} <br>
 <h6>{{ 'DERSOHALHOT' | translate }}</h6>
 {{DersoHalhotNameJSON[this.dersoHalhot]}} <br>
-<h6>{{ 'HAFETZHAIM' | translate }}</h6>
+<h6>HafetzHaim</h6>
 <div *ngIf="this.jewishCalendar.isJewishLeapYear()">
     {{HafetzHaimLongNameJSON[this.hafetzHaim]}} <br>
 </div>
 <div *ngIf="!this.jewishCalendar.isJewishLeapYear()">
     {{HafetzHaimRegularNameJSON[this.hafetzHaim]}} <br>
 </div>
-<h6>{{ 'HALAHA_YOMIT' | translate }}</h6>
-{{HalahaYomiNameJSON[this.halahaYomit]}} <br>
+<!-- <ng-container #regularYear>
+    {{HafetzHaimRegularNameJSON[this.hafetzHaim]}}
+</ng-container> -->
 </div>
 </ion-content>
-<app-navigation-buttons leftbutton="copy-outline" rightbutton="settings-outline"></app-navigation-buttons>

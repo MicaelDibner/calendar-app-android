@@ -8,7 +8,6 @@ import { StudyViewPageRoutingModule } from './study-view-routing.module';
 
 import { StudyViewPage } from './study-view.page';
 import { TranslateModule } from '@ngx-translate/core';
-import { NavigationButtonsModule } from '../navigation-buttons/navigation-buttons.module';
 
 @NgModule({
   imports: [
@@ -16,8 +15,7 @@ import { NavigationButtonsModule } from '../navigation-buttons/navigation-button
     FormsModule,
     IonicModule,
     StudyViewPageRoutingModule,
-    TranslateModule.forChild(),
-    NavigationButtonsModule
+    TranslateModule.forChild()
   ],
   declarations: [StudyViewPage]
 })

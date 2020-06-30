@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { GeoLocation, ComplexZmanimCalendar} from 'kosher-zmanim';
 import { SelectedDateService } from '../core/services/selected-date.service';
 import { IDates } from '../core/model/IDates';
-import { NgbDateStruct, NgbDate, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { GeolocationService } from '../core/services/geolocation.service';
 import { IGeolocation } from '../core/model/IGeolocation';
 import { NavController, IonContent } from '@ionic/angular';
+import { element } from 'protractor';
 
 /**
  * Page calculates times of prays for date, received from SelectedDateService
@@ -27,7 +28,6 @@ export class TimesViewPage implements OnInit {
   model: NgbDateStruct;
   complexZmanimCalendar = new ComplexZmanimCalendar();
   scroll = 0;
-  date = new Date();
 
   private buttonBackHandler;
   private buttonMenuHandler;
@@ -35,12 +35,10 @@ export class TimesViewPage implements OnInit {
   private buttonQHandler;
   private buttonUpHandler;
   private buttonDownHandler;
-  private buttonRightHandler;
-  private buttonLeftHandler;
 
   constructor(private navCntrl: NavController, private renderer: Renderer2,
               private selectedDateServise: SelectedDateService, public translate: TranslateService,
-              private geolocationServise: GeolocationService, private calendar: NgbCalendar) {}
+              private geolocationServise: GeolocationService) {}
 
 /**
  * Setting geolocation and date
@@ -58,19 +56,6 @@ export class TimesViewPage implements OnInit {
     this.buttonQHandler = this.renderer.listen('document', 'keydown.q', () => this.onBack());
     this.buttonUpHandler = this.renderer.listen('window', 'keydown.arrowup', (event) => this.onUp(event));
     this.buttonDownHandler  = this.renderer.listen('window', 'keydown.arrowdown', (event) => this.onDown(event));
-    this.buttonRightHandler = this.renderer.listen('window', 'keydown.arrowright', () => this.onRight());
-    this.buttonLeftHandler  = this.renderer.listen('window', 'keydown.arrowleft', () => this.onLeft());
-  }
-
-  onLeft(): boolean | void {
-    const ngbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
-    this.model = this.calendar.getPrev(ngbDate, 'd', 1);
-    this.setCalendarDate();
-  }
-  onRight(): boolean | void {
-    const ngbDate = new NgbDate(this.model.year, this.model.month, this.model.day);
-    this.model = this.calendar.getNext(ngbDate, 'd', 1);
-    this.setCalendarDate();
   }
 
 
@@ -81,8 +66,6 @@ export class TimesViewPage implements OnInit {
     this.buttonQHandler();
     this.buttonUpHandler();
     this.buttonDownHandler();
-    this.buttonRightHandler();
-    this.buttonLeftHandler();
   }
 
   onMenu() {
@@ -112,16 +95,15 @@ export class TimesViewPage implements OnInit {
   getDataString() {
     this.dates = this.selectedDateServise.selectedDateSubscribtion.getValue();
     this.model = this.dates.georgianDate;
-    this.setCalendarDate();
+    const date = new Date();
+    date.setFullYear(this.model.year, this.model.month - 1, this.model.day);
+    console.log(date);
+    this.complexZmanimCalendar.setDate(date);
+
     const geoLocation: IGeolocation = this.geolocationServise.selectedGeolocationSubscribtion.getValue();
     const geoLocationCalendar: GeoLocation = new GeoLocation(geoLocation.city , geoLocation.latitude, geoLocation.longitude,
     geoLocation.elevation, geoLocation.time_zone);
     this.complexZmanimCalendar.setGeoLocation(geoLocationCalendar);
-  }
-
-  setCalendarDate() {
-    this.date.setFullYear(this.model.year, this.model.month - 1, this.model.day);
-    this.complexZmanimCalendar.setDate(this.date);
   }
 
 /**

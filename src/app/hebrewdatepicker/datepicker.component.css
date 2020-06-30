@@ -3,7 +3,7 @@
   padding: 0.1rem 0.2rem 0.1rem 0.1rem;
   border-radius: 0.25rem;
   display: inline-block !important;
-  min-height: 3rem !important;
+  min-height: 100% !important;
   min-width: 100% !important;
 }
 .today{
@@ -12,11 +12,11 @@
   border-radius: 0.25rem;
 }
 .friday{
-  background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 30%, rgba(255,255,255,0) 30%);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 70%, rgba(236,199,147,1) 30%, rgba(236,199,147,1) 100%);
   border-radius: 0.25rem;
 }
 .saturday{
-  background: linear-gradient(90deg, rgba(255,255,255,0) 30%, rgba(236,199,147,1) 30%, rgba(236,199,147,1) 100%);
+  background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 70%, rgba(255,255,255,0) 30%, rgba(255,255,255,0) 100%);
   border-radius: 0.25rem;
 }
 .yomTov{
@@ -28,21 +28,39 @@
   border-radius: 0.25rem;
 }
 .roshhodesh.friday{
-  background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 30%, rgb(236, 147, 147) 0%);
-  /* background: linear-gradient(90deg, rgb(236, 147, 147) 0%, rgb(236, 147, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%); */
+  background: linear-gradient(90deg, rgb(236, 147, 147) 0%, rgb(236, 147, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
   border-radius: 0.25rem;
 }
 .roshhodesh.saturday{
-  background: linear-gradient(90deg,  rgb(236, 147, 147) 30%, rgb(236,199,147,1) 30%, rgb(236,199,147) 100%);
-  /* background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(236, 147, 147) 30%, rgb(236, 147, 147) 100%); */
+  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(236, 147, 147) 30%, rgb(236, 147, 147) 100%);
   border-radius: 0.25rem;
 }
 .holyday.friday{
-  background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 30%, rgb(183, 236, 147) 0%);
+  background: linear-gradient(90deg, rgb(183, 236, 147) 0%, rgb(183, 236, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
   border-radius: 0.25rem;
 }
 .holyday.saturday{
-  background: linear-gradient(90deg, rgb(183, 236, 147) 30%,  rgb(236,199,147,1) 30%, rgb(236,199,147) 100%);
+  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(183, 236, 147) 30%, rgb(183, 236, 147) 100%);
+  border-radius: 0.25rem;
+}
+.omer{
+  background:  rgb(147, 196, 236);
+  border-radius: 0.25rem;
+}
+.omer.friday{
+  background: linear-gradient(90deg, rgb(147, 196, 236) 0%, rgb(147, 196, 236) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
+  border-radius: 0.25rem;
+}
+.omer.saturday{
+  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(147, 196, 236) 30%, rgb(147, 196, 236) 100%);
+  border-radius: 0.25rem;
+}
+.omer.yomTov{
+  background:  rgba(236,199,147,1);
+  border-radius: 0.25rem;
+}
+.omer.holyday{
+  background:  rgb(183, 236, 147);
   border-radius: 0.25rem;
 }
 .chanukah{
@@ -50,11 +68,11 @@
   border-radius: 0.25rem;
 }
 .chanukah.friday{
-  background: linear-gradient(90deg, rgba(236,199,147,1) 0%, rgba(236,199,147,1) 30%, rgb(183, 236, 147) 0%);
+  background: linear-gradient(90deg, rgb(183, 236, 147) 0%, rgb(183, 236, 147) 70%, rgb(236,199,147) 30%, rgb(236,199,147) 100%);
   border-radius: 0.25rem;
 }
 .chanukah.saturday{
-  background: linear-gradient(90deg, rgb(183, 236, 147) 30%,  rgb(236,199,147,1) 30%, rgb(236,199,147) 100%);
+  background: linear-gradient(90deg, rgb(236,199,147) 0%, rgb(236,199,147) 70%, rgb(183, 236, 147) 30%, rgb(183, 236, 147) 100%);
   border-radius: 0.25rem;
 }
 .chanukah.yomTov{

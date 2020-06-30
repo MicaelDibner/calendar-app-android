@@ -20,13 +20,6 @@
 
 /* Optional CSS utils that can be commented out */
 @import "~bootstrap/scss/bootstrap";
-@import "node_modules/bootstrap/scss/functions";
-@import "node_modules/bootstrap/scss/variables";
-@import "node_modules/bootstrap/scss/mixins";
-
-@function theme-color($key: "primary") {
-    @return map-get($theme-colors, $key);
-  }
 
 html,
 body,
@@ -45,9 +38,6 @@ body,
   width: 100% !important;
   height: 100%;
   }
-  ngb-datepicker.rtl{
-    direction: rtl;
-  }
   ngb-dp-header {
     height: 0%;
     padding-top: 0px !important;
@@ -56,13 +46,13 @@ body,
     height: 100% !important;
   }
   ngb-datepicker-month{
-    // height: 18.2%;
+    height: 18.2%;
   }
   .ngb-dp-month {
-    // width: 100% ;
-    // height: 100% ;
-    // align-content: stretch;
-    // align-self: stretch !important;
+    width: 100% ;
+    height: 100% ;
+    align-content: stretch;
+    align-self: stretch !important;
 }
 .ngb-dp-week.ngb-dp-weekdays {
   height: auto !important;
@@ -93,9 +83,10 @@ body,
 // }
 .info {
   font-size: larger;
-  text-align: center;;
+  text-align: center;
+  height: 10%;
   position: absolute; 
-  bottom: 0;
+  bottom: 5%;
   right: 0;
   left: 0;
 }
@@ -139,10 +130,4 @@ body,
 }
 .ngb-dp-week-number.ngb-dp-weekday {
   line-height: initial !important;
-}
-
-
-
-:root {
-  --ion-color-primary-rgb:theme-color(primary);
 }
